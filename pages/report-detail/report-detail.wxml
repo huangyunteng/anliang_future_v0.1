@@ -1,0 +1,64 @@
+<!-- pages/report-detail/report-detail.wxml -->
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <custom-nav 
+    currentTab="{{currentTab}}"
+    statusBarHeight="{{statusBarHeight}}"
+    navigationHeight="{{navigationHeight}}"
+    avatarUrl="{{avatarUrl}}"
+    bind:avatartap="onAvatarTap"
+    bind:tabchange="onTabSwitch"
+    bind:moretap="onMoreTap"
+    bind:browsetap="onBrowseTap"
+  />
+  
+  <!-- 研报详情内容 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 研报头部 -->
+    <view class="report-header">
+      <text class="report-title">{{report.title}}</text>
+      <view class="report-meta">
+        <text class="meta-item">{{report.author}}</text>
+        <text class="meta-item">{{report.date}}</text>
+        <text class="meta-item">{{report.pageCount}}页</text>
+        <text class="meta-item">评分: {{report.rating}}</text>
+      </view>
+    </view>
+    
+    <!-- 研报封面 -->
+    <image class="report-cover" src="{{report.coverImage}}" mode="aspectFit"></image>
+    
+    <!-- 研报摘要 -->
+    <view class="report-summary-section">
+      <text class="section-title">摘要</text>
+      <text class="summary-content">{{report.summary}}</text>
+    </view>
+    
+    <!-- 研报内容 -->
+    <view class="report-content-section">
+      <text class="section-title">内容</text>
+      <text class="content-text">{{report.content}}</text>
+    </view>
+    
+    <!-- 投资建议 -->
+    <view class="recommendation-section" wx:if="{{report.recommendation}}">
+      <text class="section-title">投资建议</text>
+      <text class="recommendation-text">{{report.recommendation}}</text>
+    </view>
+    
+    <!-- 风险提示 -->
+    <view class="risk-section" wx:if="{{report.risk}}">
+      <text class="section-title">风险提示</text>
+      <text class="risk-text">{{report.risk}}</text>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn download-btn" bindtap="onDownload">下载PDF</button>
+      <button class="action-btn favorite-btn {{report.isFavorited ? 'active' : ''}}" bindtap="onFavorite">
+        {{report.isFavorited ? '已收藏' : '收藏'}}
+      </button>
+      <button class="action-btn share-btn" bindtap="onShare">分享</button>
+    </view>
+  </scroll-view>
+</view>

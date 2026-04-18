@@ -1,0 +1,202 @@
+/* pages/ai-agent/ai-agent.wxss */
+.page-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.ai-agent-container {
+  padding-top: 0;
+  padding-bottom: 100px;
+}
+
+.ai-avatar-section {
+  text-align: center;
+  padding: 40px 20px 30px;
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
+  border-radius: 0 0 24px 24px;
+  margin-bottom: 20px;
+}
+
+.ai-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 12px;
+}
+
+.ai-name {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.ai-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.quick-questions-section,
+.chat-history-section,
+.model-select-section {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  margin: 0 16px 16px;
+  padding: 20px;
+}
+
+.section-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 16px;
+}
+
+.quick-questions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.quick-question-item {
+  background-color: #F8F8F8;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.quick-question-item:active {
+  background-color: #F0F0F0;
+  transform: scale(0.98);
+}
+
+.question-text {
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.history-scroll {
+  max-height: 200px;
+}
+
+.message-item {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.message-item.user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  flex-shrink: 0;
+}
+
+.message-item.user .message-avatar {
+  margin-left: 12px;
+}
+
+.message-item.assistant .message-avatar {
+  margin-right: 12px;
+}
+
+.message-content {
+  flex: 1;
+  background-color: #F8F8F8;
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+}
+
+.message-item.user .message-content {
+  background-color: #C8102E;
+}
+
+.message-text {
+  font-size: 14px;
+  color: #333333;
+  line-height: 1.4;
+}
+
+.message-item.user .message-text {
+  color: #FFFFFF;
+}
+
+.message-time {
+  display: block;
+  font-size: 12px;
+  color: #999999;
+  margin-top: 4px;
+}
+
+.message-item.user .message-time {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.start-chat-section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.start-chat-btn {
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
+  color: #FFFFFF;
+  border-radius: 24px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+}
+
+.btn-text {
+  color: #FFFFFF;
+}
+
+.model-options {
+  display: flex;
+  gap: 12px;
+}
+
+.model-option {
+  flex: 1;
+  background-color: #F8F8F8;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.model-option.selected {
+  border-color: #C8102E;
+  background-color: #FFF0F2;
+}
+
+.model-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 4px;
+}
+
+.model-desc {
+  font-size: 12px;
+  color: #999999;
+}
+
+.model-option.selected .model-name {
+  color: #C8102E;
+}

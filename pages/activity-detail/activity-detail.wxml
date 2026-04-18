@@ -1,0 +1,99 @@
+<!-- pages/activity-detail/activity-detail.wxml -->
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <custom-nav 
+    currentTab="{{currentTab}}"
+    statusBarHeight="{{statusBarHeight}}"
+    navigationHeight="{{navigationHeight}}"
+    avatarUrl="{{avatarUrl}}"
+    bind:avatartap="onAvatarTap"
+    bind:tabchange="onTabSwitch"
+    bind:moretap="onMoreTap"
+    bind:browsetap="onBrowseTap"
+  />
+  
+  <!-- 活动详情内容 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 活动封面 -->
+    <image class="activity-cover" src="{{activity.coverImage}}" mode="aspectFill"></image>
+    
+    <!-- 活动头部 -->
+    <view class="activity-header">
+      <text class="activity-title">{{activity.title}}</text>
+      <view class="activity-tags">
+        <text class="activity-tag {{activity.type === 'online' ? 'online-tag' : 'offline-tag'}}">
+          {{activity.type === 'online' ? '线上活动' : '线下活动'}}
+        </text>
+        <text class="activity-tag category-tag">{{activity.category}}</text>
+      </view>
+    </view>
+    
+    <!-- 活动基本信息 -->
+    <view class="activity-info-section">
+      <view class="info-item">
+        <image class="info-icon" src="/images/icon-calendar.png"></image>
+        <text class="info-label">时间</text>
+        <text class="info-value">{{activity.date}} {{activity.time}}</text>
+      </view>
+      
+      <view class="info-item">
+        <image class="info-icon" src="/images/icon-location.png"></image>
+        <text class="info-label">地点</text>
+        <text class="info-value">{{activity.location}}</text>
+      </view>
+      
+      <view class="info-item">
+        <image class="info-icon" src="/images/icon-user.png"></image>
+        <text class="info-label">人数</text>
+        <text class="info-value">{{activity.participants}}人参与</text>
+      </view>
+      
+      <view class="info-item">
+        <image class="info-icon" src="/images/icon-organizer.png"></image>
+        <text class="info-label">组织方</text>
+        <text class="info-value">{{activity.organizer}}</text>
+      </view>
+    </view>
+    
+    <!-- 活动描述 -->
+    <view class="activity-description-section">
+      <text class="section-title">活动描述</text>
+      <text class="description-content">{{activity.description}}</text>
+    </view>
+    
+    <!-- 活动议程 -->
+    <view class="activity-agenda-section" wx:if="{{activity.agenda && activity.agenda.length}}">
+      <text class="section-title">活动议程</text>
+      <view class="agenda-list">
+        <block wx:for="{{activity.agenda}}" wx:key="*this">
+          <view class="agenda-item">
+            <text class="agenda-time">{{item.time}}</text>
+            <text class="agenda-content">{{item.content}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 演讲嘉宾 -->
+    <view class="speakers-section" wx:if="{{activity.speakers && activity.speakers.length}}">
+      <text class="section-title">演讲嘉宾</text>
+      <scroll-view class="speakers-scroll" scroll-x>
+        <block wx:for="{{activity.speakers}}" wx:key="id">
+          <view class="speaker-item">
+            <image class="speaker-avatar" src="{{item.avatar}}"></image>
+            <text class="speaker-name">{{item.name}}</text>
+            <text class="speaker-title">{{item.title}}</text>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn register-btn {{activity.isRegistered ? 'registered' : ''}}" bindtap="onRegister">
+        {{activity.isRegistered ? '已报名' : '立即报名'}}
+      </button>
+      <button class="action-btn share-btn" bindtap="onShare">分享活动</button>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,24 @@
+<!--components/customer-service-float/customer-service-float.wxml-->
+<view class="customer-service-container {{isHidden ? 'hidden' : ''}} {{isExpanded ? 'expanded' : 'collapsed'}}" bindtap="onTap">
+  <!-- 客服形象 -->
+  <view class="service-avatar">
+    <!-- 美女客服图片 -->
+    <image
+      class="avatar-image"
+      src="https://images.pexels.com/photos/3764119/pexels-photo-3764119.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop"
+      mode="aspectFill"
+    />
+    <!-- 左兔耳 -->
+    <view class="rabbit-ear left-ear">
+      <view class="ear-inner"></view>
+    </view>
+    <!-- 右兔耳 -->
+    <view class="rabbit-ear right-ear">
+      <view class="ear-inner"></view>
+    </view>
+    <!-- 客服标签 -->
+    <view class="service-label">
+      <text>客服</text>
+    </view>
+  </view>
+</view>

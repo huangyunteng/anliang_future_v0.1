@@ -1,0 +1,86 @@
+<!-- pages/search/search.wxml -->
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <custom-nav 
+    currentTab="{{currentTab}}"
+    statusBarHeight="{{statusBarHeight}}"
+    navigationHeight="{{navigationHeight}}"
+    avatarUrl="{{avatarUrl}}"
+    bind:avatartap="onAvatarTap"
+    bind:tabchange="onTabSwitch"
+    bind:moretap="onMoreTap"
+    bind:browsetap="onBrowseTap"
+  />
+  
+  <!-- 搜索页面内容 -->
+  <view class="search-container">
+    <!-- 搜索框 -->
+    <view class="search-bar">
+      <view class="search-input-container">
+        <image class="search-icon" src="/images/icon-search-gray.png"></image>
+        <input 
+          class="search-input"
+          placeholder="搜索研报、文章、活动..."
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+        />
+        <view wx:if="{{searchKeyword}}" class="clear-btn" bindtap="onClearSearch">
+          <image class="clear-icon" src="/images/icon-close.png"></image>
+        </view>
+      </view>
+      <view class="search-cancel" bindtap="onCancelSearch">取消</view>
+    </view>
+    
+    <!-- 热门搜索 -->
+    <view class="hot-search-section" wx:if="{{!searchResult.length}}">
+      <text class="section-title">热门搜索</text>
+      <view class="hot-search-tags">
+        <block wx:for="{{hotSearchTags}}" wx:key="*this">
+          <view class="hot-search-tag" data-keyword="{{item}}" bindtap="onHotSearchTap">
+            <text class="tag-text">{{item}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 搜索历史 -->
+    <view class="search-history-section" wx:if="{{!searchResult.length && searchHistory.length}}">
+      <view class="history-header">
+        <text class="section-title">搜索历史</text>
+        <view class="clear-history" bindtap="onClearHistory">
+          <image class="clear-icon" src="/images/icon-clear.png"></image>
+        </view>
+      </view>
+      <view class="history-list">
+        <block wx:for="{{searchHistory}}" wx:key="*this">
+          <view class="history-item" data-keyword="{{item}}" bindtap="onHistorySearchTap">
+            <text class="history-text">{{item}}</text>
+            <image class="history-delete" src="/images/icon-close-small.png"></image>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 搜索结果 -->
+    <view class="search-result-section" wx:if="{{searchResult.length}}">
+      <view class="result-header">
+        <text class="result-count">共找到{{searchResult.length}}个结果</text>
+      </view>
+      
+      <view class="result-list">
+        <block wx:for="{{searchResult}}" wx:key="id">
+          <view class="result-item" data-id="{{item.id}}" data-type="{{item.type}}" bindtap="onResultTap">
+            <text class="result-type {{item.type}}">{{item.type === 'report' ? '研报' : item.type === 'article' ? '文章' : '活动'}}</text>
+            <text class="result-title">{{item.title}}</text>
+            <text class="result-summary">{{item.summary}}</text>
+            <view class="result-meta">
+              <text class="meta-item">{{item.author}}</text>
+              <text class="meta-item">{{item.date}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+</view>

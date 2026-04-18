@@ -1,0 +1,71 @@
+<!-- 行情页面 -->
+<view class="container">
+  <!-- 顶部搜索 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索合约/品种" bindconfirm="search" />
+    <view class="search-btn" bindtap="search">🔍</view>
+  </view>
+
+  <!-- 分类 Tab -->
+  <view class="category-tabs">
+    <view class="tab-item {{currentCategory === 'all' ? 'active' : ''}}" 
+          bindtap="switchCategory" data-cat="all">全部</view>
+    <view class="tab-item {{currentCategory === 'metal' ? 'active' : ''}}" 
+          bindtap="switchCategory" data-cat="metal">金属</view>
+    <view class="tab-item {{currentCategory === 'energy' ? 'active' : ''}}" 
+          bindtap="switchCategory" data-cat="energy">能源</view>
+    <view class="tab-item {{currentCategory === 'agric' ? 'active' : ''}}" 
+          bindtap="switchCategory" data-cat="agric">农产品</view>
+    <view class="tab-item {{currentCategory === 'financial' ? 'active' : ''}}" 
+          bindtap="switchCategory" data-cat="financial">金融</view>
+  </view>
+
+  <!-- 行情列表 -->
+  <view class="market-list">
+    <view class="list-header">
+      <view class="col-symbol">合约</view>
+      <view class="col-name">名称</view>
+      <view class="col-price">最新价</view>
+      <view class="col-change">涨跌</view>
+    </view>
+    
+    <view class="list-item" wx:for="{{marketList}}" wx:key="symbol" bindtap="goToDetail" data-item="{{item}}">
+      <view class="col-symbol">{{item.symbol}}</view>
+      <view class="col-name">{{item.name}}</view>
+      <view class="col-price {{item.change >= 0 ? 'up' : 'down'}}">{{item.price}}</view>
+      <view class="col-change {{item.change >= 0 ? 'up' : 'down'}}">
+        {{item.change >= 0 ? '+' : ''}}{{item.change}}%
+      </view>
+    </view>
+  </view>
+
+  <!-- 涨跌榜 -->
+  <view class="section">
+    <view class="section-title">📈 涨幅榜</view>
+    <view class="rank-list">
+      <view class="rank-item" wx:for="{{topGainers}}" wx:key="symbol" wx:for-item="item">
+        <text class="rank-num">{{index + 1}}</text>
+        <text class="rank-symbol">{{item.symbol}}</text>
+        <text class="rank-change up">+{{item.change}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">📉 跌幅榜</view>
+    <view class="rank-list">
+      <view class="rank-item" wx:for="{{topLosers}}" wx:key="symbol" wx:for-item="item">
+        <text class="rank-num">{{index + 1}}</text>
+        <text class="rank-symbol">{{item.symbol}}</text>
+        <text class="rank-change down">{{item.change}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预警设置入口 -->
+  <view class="alert-entry" bindtap="goToAlert">
+    <text class="alert-icon">🔔</text>
+    <text class="alert-text">价格预警设置</text>
+    <text class="alert-arrow">›</text>
+  </view>
+</view>

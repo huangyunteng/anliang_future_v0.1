@@ -1,0 +1,61 @@
+<!-- components/custom-nav/custom-nav.wxml -->
+<!-- 自定义导航栏组件（中金点睛风格） -->
+
+<view class="custom-nav" style="padding-top: {{statusBarHeight}}px;">
+  <!-- 导航栏内容 -->
+  <view class="nav-content" style="height: {{navigationHeight}}px;">
+    
+    <!-- 左侧：头像 -->
+    <view class="nav-left" bindtap="onAvatarTap">
+      <image 
+        class="avatar" 
+        src="{{avatarUrl || '/images/default-avatar.png'}}" 
+        mode="aspectFill"
+      />
+    </view>
+    
+    <!-- 中间：Tab切换（关注/推荐） -->
+    <view class="nav-center">
+      <view class="tab-container">
+        <view 
+          class="tab-item {{currentTab === 'focus' ? 'active' : ''}}" 
+          data-tab="focus"
+          bindtap="onTabTap"
+        >
+          关注
+          <view class="tab-indicator {{currentTab === 'focus' ? 'active' : ''}}"></view>
+        </view>
+        <view 
+          class="tab-item {{currentTab === 'recommend' ? 'active' : ''}}" 
+          data-tab="recommend"
+          bindtap="onTabTap"
+        >
+          推荐
+          <view class="tab-indicator {{currentTab === 'recommend' ? 'active' : ''}}"></view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 右侧：图标按钮 -->
+    <view class="nav-right">
+      <view class="icon-btn more-btn" bindtap="onMoreTap">
+        <image 
+          class="icon" 
+          src="{{moreIcon || '/images/icons/more.png'}}" 
+          mode="aspectFit"
+        />
+      </view>
+      <view class="icon-btn browse-btn" bindtap="onBrowseTap">
+        <image 
+          class="icon" 
+          src="{{browseIcon || '/images/icons/browse.png'}}" 
+          mode="aspectFit"
+        />
+      </view>
+    </view>
+    
+  </view>
+</view>
+
+<!-- 导航栏下方的搜索栏（如果需要，可以单独放在页面中） -->
+<!-- 搜索栏通常放在页面内容中，而不是导航栏组件内 -->

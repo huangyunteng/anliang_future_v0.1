@@ -1,0 +1,111 @@
+/* pages/report-detail/report-detail.wxss */
+.page-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.content-scroll {
+  height: calc(100vh - 44px - env(safe-area-inset-bottom));
+  padding-top: calc(44px + 20px); /* 导航栏高度 + 状态栏高度 */
+}
+
+.report-header {
+  background-color: #FFFFFF;
+  padding: 20px 16px;
+}
+
+.report-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.report-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.meta-item {
+  font-size: 14px;
+  color: #666666;
+  padding-right: 12px;
+  border-right: 1px solid #EEEEEE;
+}
+
+.meta-item:last-child {
+  border-right: none;
+}
+
+.report-cover {
+  width: 100%;
+  height: 200px;
+  background-color: #F8F8F8;
+}
+
+.report-summary-section,
+.report-content-section,
+.recommendation-section,
+.risk-section {
+  background-color: #FFFFFF;
+  padding: 20px 16px;
+  margin-top: 12px;
+}
+
+.section-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.summary-content,
+.content-text,
+.recommendation-text,
+.risk-text {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.action-buttons {
+  display: flex;
+  background-color: #FFFFFF;
+  padding: 20px 16px;
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.action-btn {
+  flex: 1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px;
+}
+
+.download-btn {
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
+  color: #FFFFFF;
+}
+
+.favorite-btn {
+  background-color: #F8F8F8;
+  color: #666666;
+}
+
+.favorite-btn.active {
+  background-color: #FFF0F2;
+  color: #C8102E;
+}
+
+.share-btn {
+  background-color: #F8F8F8;
+  color: #666666;
+}

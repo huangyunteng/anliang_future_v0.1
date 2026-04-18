@@ -1,0 +1,427 @@
+<!-- pages/index/index.wxml - 中金点睛首页 -->
+<view class="page-container">
+  <!-- 自定义导航栏 -->
+  <custom-nav
+    currentTab="{{currentTab}}"
+    avatarUrl="{{avatarUrl}}"
+    moreIcon="/images/icons/more.png"
+    browseIcon="/images/icons/browse.png"
+    statusBarHeight="{{statusBarHeight}}"
+    navigationHeight="{{navigationHeight}}"
+    bindtabchange="onTabSwitch"
+    bindavatartap="onAvatarTap"
+    bindmoretap="onMoreTap"
+    bindbrowsetap="onBrowseTap"
+  />
+
+  <!-- 页面内容 -->
+  <scroll-view
+    class="content-scroll"
+    style="padding-top: {{scrollPaddingTop}}px;"
+    scroll-y
+    refresher-enabled
+    refresher-triggered="{{refreshLoading}}"
+    bindrefresherrefresh="onPullDownRefresh"
+  >
+    
+    
+    <!-- 搜索栏 -->
+    <view class="search-section">
+      <view class="search-bar" bindtap="onSearchTap">
+        <image class="search-bar-icon" src="https://api.iconify.design/mdi:magnify.svg?color=%23666666" mode="aspectFit"></image>
+        <text class="search-bar-text">搜索热门研报</text>
+      </view>
+    </view>
+
+    <!-- 主题专栏（自动缓慢匀速轮播） -->
+    <view class="theme-columns-section">
+      <swiper
+        class="theme-columns-swiper"
+        indicator-dots="{{false}}"
+        autoplay
+        interval="3000"
+        circular
+        display-multiple-items="2"
+        current="{{currentThemeIndex}}"
+        bindchange="onThemeChange"
+      >
+        <block wx:for="{{themeColumns}}" wx:key="id">
+          <swiper-item>
+            <view class="theme-column-item swiper-item" data-id="{{item.id}}" bindtap="onThemeColumnTap">
+              <image class="theme-column-image" src="{{item.imageUrl}}" mode="aspectFill"/>
+              <view class="theme-column-info">
+                <text class="theme-column-title">{{item.title}}</text>
+                <text class="theme-column-subtitle">{{item.subtitle}}</text>
+              </view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <!-- Banner轮播图 -->
+    <view class="banner-section">
+      <swiper 
+        class="banner-swiper"
+        indicator-dots
+        indicator-color="rgba(255,255,255,0.3)"
+        indicator-active-color="#FFFFFF"
+        autoplay
+        interval="5000"
+        circular
+        current="{{currentBannerIndex}}"
+        bindchange="onBannerChange"
+      >
+        <block wx:for="{{banners}}" wx:key="id">
+          <swiper-item>
+            <view 
+              class="banner-item"
+              data-index="{{index}}"
+              bindtap="onBannerTap"
+            >
+              <image 
+                class="banner-image"
+                src="{{item.imageUrl}}"
+                mode="aspectFill"
+                lazy-load
+              />
+              <view class="banner-overlay"></view>
+              <view class="banner-info">
+                <text class="banner-title">{{item.title}}</text>
+                <text class="banner-subtitle">{{item.subtitle}}</text>
+              </view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <!-- 大家都在问 -->
+    <view class="questions-section">
+      <view class="section-header">
+        <text class="section-title">大家都在问</text>
+      </view>
+      <view class="questions-list">
+        <block wx:for="{{hotQuestions}}" wx:key="id">
+          <view
+            class="question-item {{item.isExpanded ? 'expanded' : ''}}"
+            data-index="{{index}}"
+            bindtap="onQuestionToggle"
+          >
+            <view class="question-header">
+              <text class="question-title">{{item.title}}</text>
+              <view class="question-arrow {{item.isExpanded ? 'icon-arrow-up' : 'icon-arrow-down'}}"></view>
+            </view>
+            <view wx:if="{{item.isExpanded}}" class="question-answer">
+              <text class="answer-text">{{item.answer}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 文章精选 -->
+    <view class="articles-section">
+      <view class="section-header">
+        <text class="section-title">文章精选</text>
+        <view class="section-more" bindtap="onMoreArticles">
+          <text class="more-text">更多</text>
+          <view class="more-icon icon-arrow-right"></view>
+        </view>
+      </view>
+      
+      <!-- 文章分类标签 -->
+      <view class="article-categories">
+        <scroll-view class="categories-scroll" scroll-x>
+          <block wx:for="{{articleCategories}}" wx:key="*this">
+            <view 
+              class="category-tab {{selectedCategoryIndex === index ? 'active' : ''}}"
+              data-index="{{index}}"
+              bindtap="onCategoryTabSwitch"
+            >
+              <text class="category-text">{{item}}</text>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+      
+      <!-- 文章列表 -->
+      <view class="articles-list">
+        <block wx:for="{{articles}}" wx:key="id">
+          <view 
+            class="article-item"
+            data-id="{{item.id}}"
+            bindtap="onArticleTap"
+          >
+            <view class="article-content">
+              <text class="article-title">{{item.title}}</text>
+              <text class="article-summary">{{item.summary}}</text>
+              <view class="article-footer">
+                <text class="article-author">{{item.author}}</text>
+                <text class="article-time">{{item.time}}</text>
+                <view class="article-stats">
+                  <view class="stat-item">
+                    <image class="stat-icon" src="https://api.iconify.design/mdi:eye-outline.svg?color=%23666666" mode="aspectFit"></image>
+                    <text class="stat-count">{{item.readCount}}</text>
+                  </view>
+                  <view class="stat-item">
+                    <image class="stat-icon" src="https://api.iconify.design/mdi:comment-outline.svg?color=%23666666" mode="aspectFit"></image>
+                    <text class="stat-count">{{item.commentCount}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 中金推荐 -->
+    <view class="reports-section">
+      <view class="section-header">
+        <text class="section-title">中金推荐</text>
+        <view class="section-more" bindtap="onMoreReports">
+          <text class="more-text">更多</text>
+          <view class="more-icon icon-arrow-right"></view>
+        </view>
+      </view>
+
+      <swiper
+        class="reports-swiper"
+        indicator-dots
+        indicator-color="rgba(200, 16, 46, 0.3)"
+        indicator-active-color="#C8102E"
+        autoplay
+        interval="5000"
+        circular
+        current="{{currentReportIndex}}"
+        bindchange="onReportChange"
+      >
+        <block wx:for="{{recommendedReports}}" wx:key="id">
+          <swiper-item>
+            <view
+              class="report-item-full"
+              data-id="{{item.id}}"
+              bindtap="onReportTap"
+            >
+              <image
+                class="report-cover-full"
+                src="{{item.coverImage}}"
+                mode="aspectFill"
+              />
+              <view class="report-info-full">
+                <text class="report-title-full">{{item.title}}</text>
+                <text class="report-author-full">{{item.author}}</text>
+                <view class="report-meta-full">
+                  <text class="report-date-full">{{item.date}}</text>
+                  <text class="report-pages-full">{{item.pageCount}}页</text>
+                </view>
+                <view class="report-rating-full">
+                  <text class="rating-text-full">评分：{{item.rating}}</text>
+                  <view class="rating-stars-full">
+                    <view class="star-icon icon-star"></view>
+                    <view class="star-icon icon-star"></view>
+                    <view class="star-icon icon-star"></view>
+                    <view class="star-icon icon-star"></view>
+                    <view class="star-icon icon-star-half"></view>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <!-- 活动日历 -->
+    <view class="calendar-section">
+      <view class="section-header">
+        <text class="section-title">活动日历</text>
+        <view class="section-more" bindtap="onMoreEvents">
+          <text class="more-text">更多</text>
+          <view class="more-icon icon-arrow-right"></view>
+        </view>
+      </view>
+
+      <!-- 星期标题行 -->
+      <view class="calendar-weekdays">
+        <view class="weekday-item">周一</view>
+        <view class="weekday-item">周二</view>
+        <view class="weekday-item">周三</view>
+        <view class="weekday-item">周四</view>
+        <view class="weekday-item">周五</view>
+        <view class="weekday-item">周六</view>
+        <view class="weekday-item">周日</view>
+      </view>
+
+      <!-- 日期选择器 -->
+      <view class="calendar-dates">
+        <scroll-view class="dates-scroll" scroll-x>
+          <block wx:for="{{calendarDates}}" wx:key="id">
+            <view
+              class="date-item {{selectedCalendarDateIndex === index ? 'active' : ''}}"
+              data-index="{{index}}"
+              bindtap="onCalendarDateSwitch"
+            >
+              <view class="date-box {{item.hasEvent ? 'has-event' : ''}}">
+                <text class="date-number">{{item.date}}</text>
+                <view wx:if="{{item.hasEvent}}" class="date-dot"></view>
+              </view>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+
+      <!-- 活动列表（横向轮播） -->
+      <swiper
+        class="events-swiper"
+        wx:if="{{events.length > 0}}"
+        indicator-dots
+        indicator-color="rgba(200, 16, 46, 0.3)"
+        indicator-active-color="#C8102E"
+        current="{{currentEventIndex}}"
+        bindchange="onEventChange"
+      >
+        <block wx:for="{{events}}" wx:key="id">
+          <swiper-item>
+            <view
+              class="event-item-full"
+              data-id="{{item.id}}"
+              bindtap="onEventTap"
+            >
+              <view class="event-time-full">
+                <text class="event-time-text-full">{{item.time}}</text>
+              </view>
+              <view class="event-info-full">
+                <text class="event-title-full">{{item.title}}</text>
+                <text class="event-location-full">{{item.location}}</text>
+              </view>
+              <view class="event-arrow-full icon-arrow-right-gray"></view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <!-- 特色活动 -->
+    <view class="featured-events-section">
+      <view class="section-header">
+        <text class="section-title">特色活动</text>
+      </view>
+
+      <swiper
+        class="featured-events-swiper"
+        indicator-dots
+        indicator-color="rgba(200, 16, 46, 0.3)"
+        indicator-active-color="#C8102E"
+        autoplay
+        interval="5000"
+        circular
+        current="{{currentFeaturedEventIndex}}"
+        bindchange="onFeaturedEventChange"
+      >
+        <block wx:for="{{featuredEvents}}" wx:key="id">
+          <swiper-item>
+            <view class="featured-event-item-full">
+              <image
+                class="featured-event-image-full"
+                src="{{item.imageUrl}}"
+                mode="aspectFill"
+              />
+              <view class="featured-event-info-full">
+                <text class="featured-event-title-full">{{item.title}}</text>
+                <view class="featured-event-meta-full">
+                  <image class="meta-icon-full" src="https://api.iconify.design/mdi:calendar.svg?color=%23888888" mode="aspectFit"></image>
+                  <text class="meta-text-full">{{item.date}}</text>
+                </view>
+                <view class="featured-event-meta-full">
+                  <image class="meta-icon-full" src="https://api.iconify.design/mdi:map-marker.svg?color=%23888888" mode="aspectFit"></image>
+                  <text class="meta-text-full">{{item.location}}</text>
+                </view>
+                <view class="featured-event-buttons-full">
+                  <button class="event-btn-full detail-btn-full" data-id="{{item.id}}" bindtap="onEventTap">详情</button>
+                  <button class="event-btn-full register-btn-full">立即报名</button>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+
+    <!-- 研究团队 -->
+    <view class="team-section">
+      <view class="section-header">
+        <text class="section-title">研究团队</text>
+        <view class="section-more" bindtap="onMoreAnalysts">
+          <text class="more-text">更多</text>
+          <view class="more-icon icon-arrow-right"></view>
+        </view>
+      </view>
+      
+      <view class="team-list">
+        <scroll-view class="team-scroll" scroll-x>
+          <block wx:for="{{researchTeam}}" wx:key="id">
+            <view 
+              class="team-member"
+              data-id="{{item.id}}"
+              bindtap="onAnalystTap"
+            >
+              <image 
+                class="member-avatar"
+                src="{{item.avatar}}"
+                mode="aspectFill"
+              />
+              <text class="member-name">{{item.name}}</text>
+              <text class="member-title">{{item.title}}</text>
+              <view class="member-expertise">
+                <text class="expertise-tag">{{item.expertise[0]}}</text>
+              </view>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+    </view>
+
+    <!-- 出版书籍 -->
+    <view class="books-section">
+      <view class="section-header">
+        <text class="section-title">出版书籍</text>
+      </view>
+      
+      <view class="books-list">
+        <scroll-view class="books-scroll" scroll-x>
+          <block wx:for="{{publishedBooks}}" wx:key="id">
+            <view 
+              class="book-item"
+              data-id="{{item.id}}"
+              bindtap="onBookTap"
+            >
+              <image 
+                class="book-cover"
+                src="{{item.coverImage}}"
+                mode="aspectFill"
+              />
+              <view class="book-info">
+                <text class="book-title">{{item.title}}</text>
+                <text class="book-author">{{item.author}}</text>
+                <text class="book-desc">{{item.description}}</text>
+              </view>
+            </view>
+          </block>
+        </scroll-view>
+      </view>
+    </view>
+
+    <!-- 页面底部 -->
+    <view class="page-footer">
+      <text class="footer-text">数据来源：中金公司研究报告</text>
+      <text class="footer-text">更新时间：{{time}}</text>
+    </view>
+  </scroll-view>
+
+  
+
+  <!-- 兔耳朵美女客服浮窗 -->
+  <customer-service-float show="{{true}}"></customer-service-float>
+</view>

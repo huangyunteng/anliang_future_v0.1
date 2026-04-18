@@ -1,0 +1,155 @@
+<!-- pages/data/data.wxml -->
+<view class="page-container">
+  
+  <!-- 数据页面内容 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 数据概览 -->
+    <view class="overview-section">
+      <view class="overview-header">
+        <text class="section-title">市场数据概览</text>
+        <text class="update-time">更新时间: {{updateTime}}</text>
+      </view>
+      
+      <view class="overview-grid">
+        <view class="overview-item">
+          <text class="overview-label">上证指数</text>
+          <text class="overview-value {{marketData.shIndex.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.shIndex.value.toFixed(2)}}
+          </text>
+          <text class="overview-change {{marketData.shIndex.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.shIndex.change >= 0 ? '+' : ''}}{{marketData.shIndex.change}}%
+          </text>
+        </view>
+        
+        <view class="overview-item">
+          <text class="overview-label">深证成指</text>
+          <text class="overview-value {{marketData.szIndex.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.szIndex.value.toFixed(2)}}
+          </text>
+          <text class="overview-change {{marketData.szIndex.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.szIndex.change >= 0 ? '+' : ''}}{{marketData.szIndex.change}}%
+          </text>
+        </view>
+        
+        <view class="overview-item">
+          <text class="overview-label">创业板指</text>
+          <text class="overview-value {{marketData.cybIndex.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.cybIndex.value.toFixed(2)}}
+          </text>
+          <text class="overview-change {{marketData.cybIndex.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.cybIndex.change >= 0 ? '+' : ''}}{{marketData.cybIndex.change}}%
+          </text>
+        </view>
+        
+        <view class="overview-item">
+          <text class="overview-label">沪深300</text>
+          <text class="overview-value {{marketData.hs300.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.hs300.value.toFixed(2)}}
+          </text>
+          <text class="overview-change {{marketData.hs300.change >= 0 ? 'rise' : 'fall'}}">
+            {{marketData.hs300.change >= 0 ? '+' : ''}}{{marketData.hs300.change}}%
+          </text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 期货品种选择 -->
+    <view class="futures-filter-section">
+      <scroll-view class="futures-filter-scroll" scroll-x>
+        <block wx:for="{{futuresCategories}}" wx:key="*this">
+          <view 
+            class="futures-filter-tab {{activeFuturesCategory === item ? 'active' : ''}}" 
+            data-category="{{item}}"
+            bindtap="onFuturesCategoryChange"
+          >
+            <text class="futures-filter-text">{{item}}</text>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+    
+    <!-- 图表区域 -->
+    <view class="chart-section">
+      <view class="chart-header">
+        <text class="chart-title">{{activeFuturesCategory}}价格走势</text>
+        <view class="chart-time-range">
+          <block wx:for="{{timeRanges}}" wx:key="*this">
+            <view 
+              class="time-range-tab {{activeTimeRange === item ? 'active' : ''}}" 
+              data-range="{{item}}"
+              bindtap="onTimeRangeChange"
+            >
+              <text class="time-range-text">{{item}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      
+      <!-- 图表容器 -->
+      <view class="chart-container">
+        <!-- 这里可以放置echarts图表 -->
+        <view class="chart-placeholder">
+          <image class="chart-icon" src="https://api.iconify.design/mdi:chart-line.svg?color=%23999999" mode="aspectFit"></image>
+          <text class="chart-placeholder-text">图表加载中...</text>
+          <text class="chart-placeholder-desc">使用ECharts展示{{activeFuturesCategory}}价格走势</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 热门期货品种 -->
+    <view class="hot-futures-section">
+      <view class="section-header">
+        <text class="section-title">热门期货品种</text>
+        <view class="section-more" bindtap="onMoreFutures">
+          <text class="more-text">更多</text>
+          <view class="more-icon icon-arrow-right"></view>
+        </view>
+      </view>
+      
+      <view class="hot-futures-list">
+        <block wx:for="{{hotFutures}}" wx:key="symbol">
+          <view class="hot-future-item" data-symbol="{{item.symbol}}" bindtap="onFutureTap">
+            <view class="future-header">
+              <text class="future-name">{{item.name}}</text>
+              <text class="future-symbol">{{item.symbol}}</text>
+            </view>
+            
+            <view class="future-price">
+              <text class="price-value {{item.change >= 0 ? 'rise' : 'fall'}}">
+                {{item.price.toFixed(2)}}
+              </text>
+              <text class="price-change {{item.change >= 0 ? 'rise' : 'fall'}}">
+                {{item.change >= 0 ? '+' : ''}}{{item.change}}%
+              </text>
+            </view>
+            
+            <view class="future-meta">
+              <text class="meta-item">成交量: {{item.volume}}</text>
+              <text class="meta-item">持仓量: {{item.openInterest}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 宏观经济指标 -->
+    <view class="macro-section">
+      <view class="section-header">
+        <text class="section-title">宏观经济指标</text>
+      </view>
+      
+      <view class="macro-indicators">
+        <block wx:for="{{macroIndicators}}" wx:key="name">
+          <view class="macro-indicator">
+            <text class="indicator-name">{{item.name}}</text>
+            <text class="indicator-value">{{item.value}}</text>
+            <text class="indicator-unit">{{item.unit}}</text>
+            <text class="indicator-change {{item.change >= 0 ? 'rise' : 'fall'}}">
+              {{item.change >= 0 ? '+' : ''}}{{item.change}}%
+            </text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </scroll-view>
+</view>

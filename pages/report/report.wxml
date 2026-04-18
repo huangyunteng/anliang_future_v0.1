@@ -1,0 +1,57 @@
+<!-- pages/report/report.wxml -->
+<view class="page-container">
+  <!-- 页面内容 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 页面标题 -->
+    <view class="page-header">
+      <text class="page-title">研报中心</text>
+      <text class="page-subtitle">专业研究，深度见解</text>
+    </view>
+    
+    <!-- 简单测试内容 -->
+    <view style="padding: 40rpx; text-align: center;">
+      <text>研报页面 - TabBar切换测试</text>
+      <text>如果看到这个，说明页面加载成功</text>
+    </view>
+    
+    <!-- 研报列表 -->
+    <view class="reports-list">
+      <block wx:for="{{reports}}" wx:key="id">
+        <view class="report-item" data-id="{{item.id}}" bindtap="onReportTap">
+          <view class="report-header">
+            <text class="report-title">{{item.title}}</text>
+            <text class="report-tag {{item.tagType}}">{{item.tag}}</text>
+          </view>
+          <view class="report-content">
+            <text class="report-summary">{{item.summary}}</text>
+          </view>
+          <view class="report-footer">
+            <text class="report-author">{{item.author}}</text>
+            <text class="report-date">{{item.date}}</text>
+            <view class="report-stats">
+              <view class="stat">
+                <image class="stat-icon" src="https://api.iconify.design/mdi:eye-outline.svg?color=%23666666" mode="aspectFit"></image>
+                <text class="stat-number">{{item.viewCount}}</text>
+              </view>
+              <view class="stat">
+                <image class="stat-icon" src="https://api.iconify.design/mdi:download.svg?color=%23666666" mode="aspectFit"></image>
+                <text class="stat-number">{{item.downloadCount}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore}}" class="load-more" bindtap="onLoadMore">
+      <text class="load-more-text">加载更多</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && reports.length === 0}}" class="empty-state">
+      <image class="empty-icon" src="https://api.iconify.design/mdi:inbox.svg?color=%23CCCCCC&width=120&height=120" mode="aspectFit"></image>
+      <text class="empty-text">暂无研报数据</text>
+    </view>
+  </scroll-view>
+</view>

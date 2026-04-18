@@ -1,0 +1,111 @@
+/* components/custom-tabbar/custom-tabbar.wxss */
+.custom-tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: #FFFFFF;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tabbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+  position: relative;
+}
+
+.tabbar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tabbar-item-middle {
+  flex: 1;
+  position: relative;
+  z-index: 10;
+}
+
+.item-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-icon .icon {
+  width: 100%;
+  height: 100%;
+}
+
+.item-text {
+  font-size: 10px;
+  color: #999999;
+  line-height: 1.2;
+  transition: color 0.2s ease;
+}
+
+.tabbar-item.active .item-text {
+  color: #C8102E;
+  font-weight: 500;
+}
+
+/* 中间按钮样式 */
+.middle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: -15px; /* 向上突出 */
+}
+
+.middle-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+.tabbar-item-middle.active .middle-icon-wrapper {
+  background: linear-gradient(135deg, #B00E28 0%, #C8102E 100%);
+  box-shadow: 0 6px 16px rgba(200, 16, 46, 0.4);
+  transform: scale(1.05);
+}
+
+.middle-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.middle-text {
+  font-size: 10px;
+  color: #C8102E;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tabbar-item-middle.active .middle-text {
+  color: #B00E28;
+}
+
+/* 安全区域适配 */
+.custom-tabbar {
+  padding-bottom: env(safe-area-inset-bottom);
+}

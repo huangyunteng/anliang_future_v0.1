@@ -1,0 +1,63 @@
+<!-- pages/ai-agent/ai-agent.wxml -->
+<view class="page-container">
+  
+  <!-- AI智能体主界面 -->
+  <view class="ai-agent-container">
+    <!-- AI助手头像 -->
+    <view class="ai-avatar-section">
+      <image class="ai-avatar" src="/images/avatar-ai.png"></image>
+      <text class="ai-name">智演智能体</text>
+      <text class="ai-description">您的专属期货投研助手</text>
+    </view>
+    
+    <!-- 快捷提问 -->
+    <view class="quick-questions-section">
+      <text class="section-title">快捷提问</text>
+      <view class="quick-questions-grid">
+        <block wx:for="{{quickQuestions}}" wx:key="*this">
+          <view class="quick-question-item" data-question="{{item}}" bindtap="onQuickQuestionTap">
+            <text class="question-text">{{item}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+    
+    <!-- 对话历史 -->
+    <view class="chat-history-section" wx:if="{{messages.length > 0}}">
+      <text class="section-title">对话历史</text>
+      <scroll-view class="history-scroll" scroll-y>
+        <block wx:for="{{messages}}" wx:key="id">
+          <view class="message-item {{item.role}}">
+            <image class="message-avatar" src="{{item.role === 'user' ? avatarUrl : '/images/avatar-ai.png'}}"></image>
+            <view class="message-content">
+              <text class="message-text">{{item.content}}</text>
+              <text class="message-time">{{item.time}}</text>
+            </view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+    
+    <!-- 开始对话按钮 -->
+    <view class="start-chat-section" wx:if="{{messages.length === 0}}">
+      <button class="start-chat-btn" bindtap="onStartChatTap">
+        <text class="btn-text">开始对话</text>
+      </button>
+    </view>
+    
+    <!-- 模型选择 -->
+    <view class="model-select-section">
+      <text class="section-title">选择AI模型</text>
+      <view class="model-options">
+        <view class="model-option {{selectedModel === 'qianwen' ? 'selected' : ''}}" data-model="qianwen" bindtap="onModelSelect">
+          <text class="model-name">千问（免费）</text>
+          <text class="model-desc">通用问答</text>
+        </view>
+        <view class="model-option {{selectedModel === 'doubao' ? 'selected' : ''}}" data-model="doubao" bindtap="onModelSelect">
+          <text class="model-name">豆包（专业版）</text>
+          <text class="model-desc">深度分析</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

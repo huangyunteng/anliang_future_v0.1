@@ -1,0 +1,198 @@
+/* pages/activity-detail/activity-detail.wxss */
+.page-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+}
+
+.content-scroll {
+  height: calc(100vh - 44px - env(safe-area-inset-bottom));
+  padding-top: calc(44px + 20px); /* 导航栏高度 + 状态栏高度 */
+}
+
+.activity-cover {
+  width: 100%;
+  height: 300px;
+  background-color: #F8F8F8;
+}
+
+.activity-header {
+  background-color: #FFFFFF;
+  padding: 20px 16px;
+}
+
+.activity-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.activity-tags {
+  display: flex;
+  gap: 12px;
+}
+
+.activity-tag {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.online-tag {
+  background-color: #E8F4FF;
+  color: #1890FF;
+}
+
+.offline-tag {
+  background-color: #F6FFED;
+  color: #52C41A;
+}
+
+.category-tag {
+  background-color: #FFF7E6;
+  color: #FA8C16;
+}
+
+.activity-info-section,
+.activity-description-section,
+.activity-agenda-section,
+.speakers-section {
+  background-color: #FFFFFF;
+  padding: 20px 16px;
+  margin-top: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+  opacity: 0.6;
+}
+
+.info-label {
+  font-size: 14px;
+  color: #666666;
+  width: 60px;
+}
+
+.info-value {
+  flex: 1;
+  font-size: 14px;
+  color: #333333;
+}
+
+.section-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.description-content {
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.6;
+}
+
+.agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.agenda-item {
+  display: flex;
+}
+
+.agenda-time {
+  width: 60px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.agenda-content {
+  flex: 1;
+  font-size: 14px;
+  color: #666666;
+  line-height: 1.4;
+}
+
+.speakers-scroll {
+  white-space: nowrap;
+}
+
+.speaker-item {
+  display: inline-block;
+  width: 80px;
+  text-align: center;
+  margin-right: 16px;
+}
+
+.speaker-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 8px;
+}
+
+.speaker-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 4px;
+}
+
+.speaker-title {
+  display: block;
+  font-size: 10px;
+  color: #999999;
+  line-height: 1.2;
+}
+
+.action-buttons {
+  display: flex;
+  background-color: #FFFFFF;
+  padding: 20px 16px;
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.action-btn {
+  flex: 1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px;
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
+  color: #FFFFFF;
+}
+
+.register-btn.registered {
+  background-color: #CCCCCC;
+  color: #FFFFFF;
+}
+
+.share-btn {
+  background-color: #F8F8F8;
+  color: #666666;
+}

@@ -1,0 +1,77 @@
+<!-- components/ai-chat/ai-chat.wxml -->
+<view class="ai-chat-container" wx:if="{{show}}" style="top: {{position.y}}px; left: {{position.x}}px">
+  <view class="ai-chat-modal" catchtouchmove="preventTouchMove">
+    <!-- 头部 -->
+    <view class="chat-header">
+      <view class="header-left">
+        <image class="ai-icon" src="https://api.iconify.design/mdi:robot.svg?color=%23C8102E" mode="aspectFit"></image>
+        <text class="ai-title">AI投顾助手</text>
+      </view>
+      <image class="close-btn" src="/images/icon-close.png" bindtap="onCloseTap"></image>
+    </view>
+    
+    <!-- 对话区域 -->
+    <scroll-view class="chat-messages" scroll-y scroll-into-view="msg-{{scrollToId}}">
+      <block wx:for="{{messages}}" wx:key="id">
+        <view class="message-item {{item.role}}" id="msg-{{item.id}}">
+          <view class="avatar">
+            <block wx:if="{{item.role === 'user'}}">
+              <image class="avatar-icon" src="/images/avatar-user.png"></image>
+            </block>
+            <block wx:else>
+              <image class="avatar-icon" src="/images/avatar-ai.png"></image>
+            </block>
+          </view>
+          <view class="message-content">
+            <view class="message-text">{{item.content}}</view>
+            <view wx:if="{{item.loading}}" class="loading-dots">
+              <text>.</text><text>.</text><text>.</text>
+            </view>
+            <view wx:if="{{item.time}}" class="message-time">{{item.time}}</view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+    
+    <!-- 输入区域 -->
+    <view class="chat-input-area">
+      <view class="input-wrapper">
+        <input 
+          class="chat-input" 
+          value="{{inputValue}}"
+          placeholder="请输入您的问题..."
+          placeholder-class="placeholder"
+          focus="{{autoFocus}}"
+          bindinput="onInput"
+          bindconfirm="onSend"
+          maxlength="{{500}}"
+        />
+        <view class="input-actions">
+          <view class="action-btn" bindtap="onClearTap">
+            <image class="action-icon" src="/images/icon-clear.png"></image>
+            <text class="action-text">清空</text>
+          </view>
+          <button 
+            class="send-btn {{inputValue ? 'active' : ''}}"
+            bindtap="onSend"
+            disabled="{{!inputValue || sending}}"
+          >
+            {{sending ? '发送中...' : '发送'}}
+          </button>
+        </view>
+      </view>
+      
+      <!-- 快捷问题 -->
+      <view wx:if="{{suggestions.length > 0}}" class="quick-questions">
+        <text class="quick-title">快捷提问：</text>
+        <view class="questions-list">
+          <block wx:for="{{suggestions}}" wx:key="*this">
+            <view class="question-tag" data-question="{{item}}" bindtap="onQuickQuestionTap">
+              {{item}}
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
