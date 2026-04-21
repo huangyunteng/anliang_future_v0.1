@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/ai-agent/ai-agent",
     "pages/index/index",
     "pages/report/report",
-    "pages/ai-agent/ai-agent",
     "pages/activity/activity",
     "pages/data/data",
     "pages/report-detail/report-detail",
@@ -26,7 +26,7 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
+        "text": "推荐",
         "iconPath": "images/tabs/home.png",
         "selectedIconPath": "images/tabs/home-active.png"
       },
