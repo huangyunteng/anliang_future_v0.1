@@ -21,6 +21,36 @@ from agentscope.tool import Toolkit, execute_python_code, ToolResponse
 from agentscope.message import Msg
 
 
+# 全局工具函数
+def extract_text_from_response(resp) -> str:
+    """从AgentScope响应中提取文本内容"""
+    if not resp:
+        return ""
+    
+    # 如果有text属性，直接使用
+    if hasattr(resp, 'text'):
+        return resp.text
+    
+    # 如果有content属性，可能为字符串或列表
+    if hasattr(resp, 'content'):
+        content = resp.content
+        if isinstance(content, str):
+            return content
+        elif isinstance(content, list):
+            # 处理列表格式，如 [{'type': 'text', 'text': '...'}]
+            text_parts = []
+            for item in content:
+                if isinstance(item, dict) and 'text' in item:
+                    text_parts.append(item['text'])
+                elif isinstance(item, str):
+                    text_parts.append(item)
+            if text_parts:
+                return '\n'.join(text_parts)
+    
+    # 其他情况转换为字符串
+    return str(resp)
+
+
 # ===================== 1. 模型配置 =====================
 # 通过设置环境变量 MODEL_PROVIDER 来切换模型，可选值：bailian, siliconflow, doubao
 MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "bailian").lower()
@@ -777,35 +807,7 @@ async def chat(request: Dict[str, Any] = Body(...)):
         response = await coordinator_agent(Msg(name="user", role="user", content=question))
         print(f"DEBUG: Response type: {type(response)}, response: {response}")
         
-        # 安全地获取响应文本，处理AgentScope的复杂返回格式
-        def extract_text_from_response(resp) -> str:
-            """从AgentScope响应中提取文本内容"""
-            if not resp:
-                return ""
-            
-            # 如果有text属性，直接使用
-            if hasattr(resp, 'text'):
-                return resp.text
-            
-            # 如果有content属性，可能为字符串或列表
-            if hasattr(resp, 'content'):
-                content = resp.content
-                if isinstance(content, str):
-                    return content
-                elif isinstance(content, list):
-                    # 处理列表格式，如 [{'type': 'text', 'text': '...'}]
-                    text_parts = []
-                    for item in content:
-                        if isinstance(item, dict) and 'text' in item:
-                            text_parts.append(item['text'])
-                        elif isinstance(item, str):
-                            text_parts.append(item)
-                    if text_parts:
-                        return '\n'.join(text_parts)
-            
-            # 其他情况转换为字符串
-            return str(resp)
-        
+        # 使用全局函数提取响应文本
         response_text = extract_text_from_response(response)
         print(f"DEBUG: Extracted response_text: {response_text[:500]}...")
         
@@ -850,35 +852,7 @@ async def chat_with_agent(agent_name: str, question: str = Body(..., embed=True)
         response = await agent(Msg(name="user", role="user", content=question))
         print(f"DEBUG: Response type: {type(response)}, response: {response}")
         
-        # 安全地获取响应文本，处理AgentScope的复杂返回格式
-        def extract_text_from_response(resp) -> str:
-            """从AgentScope响应中提取文本内容"""
-            if not resp:
-                return ""
-            
-            # 如果有text属性，直接使用
-            if hasattr(resp, 'text'):
-                return resp.text
-            
-            # 如果有content属性，可能为字符串或列表
-            if hasattr(resp, 'content'):
-                content = resp.content
-                if isinstance(content, str):
-                    return content
-                elif isinstance(content, list):
-                    # 处理列表格式，如 [{'type': 'text', 'text': '...'}]
-                    text_parts = []
-                    for item in content:
-                        if isinstance(item, dict) and 'text' in item:
-                            text_parts.append(item['text'])
-                        elif isinstance(item, str):
-                            text_parts.append(item)
-                    if text_parts:
-                        return '\n'.join(text_parts)
-            
-            # 其他情况转换为字符串
-            return str(resp)
-        
+        # 使用全局函数提取响应文本
         response_text = extract_text_from_response(response)
         print(f"DEBUG: Extracted response_text: {response_text[:500]}...")
         
@@ -909,7 +883,8 @@ async def stream_chat(question: str):
             # 这里简化实现，实际需要根据agentscope的流式响应配置
             # 由于agentscope的流式支持可能有限，这里先返回完整响应
             response = await coordinator_agent(Msg(name="user", role="user", content=question))
-            yield f"data: {json.dumps({'chunk': response.text})}\n\n"
+            response_text = extract_text_from_response(response)
+            yield f"data: {json.dumps({'chunk': response_text})}\n\n"
         except Exception as e:
             yield f"data: {json.dumps({'error': str(e)})}\n\n"
     
