@@ -15,7 +15,7 @@ CONFIG_DATA = {
         "wrapper_class": DashScopeChatWrapper,
         "kwargs": {
             "config_name": "qwen",
-            "api_key": os.getenv("DASHSCOPE_API_KEY", "sk-xxxxxxxxxxxx"),
+            "api_key": os.getenv("DASHSCOPE_API_KEY", "sk-c722d4d16f9c4fca9e7b8e8401603a29"),
             "model_name": "qwen-plus",  # 或 qwen-turbo, qwen-max
             "generate_args": {"temperature": 0.7, "max_tokens": 4096},
         }

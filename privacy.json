@@ -1,0 +1,17 @@
+{
+  "version": "1",
+  "privacyPolicyUrl": "https://example.com/privacy",
+  "disclaimerText": "本小程序仅用于演示，不会收集用户隐私信息。",
+  "children": {
+    "version": "1",
+    "privacyPolicyUrl": "https://example.com/privacy",
+    "disclaimerText": "本小程序仅用于演示，不会收集儿童隐私信息。"
+  },
+  "settingItems": [
+    {
+      "identity": "location",
+      "title": "位置信息",
+      "desc": "用于获取用户位置信息，为您提供本地化服务。"
+    }
+  ]
+}

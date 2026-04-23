@@ -1,0 +1,61 @@
+<view class="container">
+  <view class="header">
+    <text class="title">🔧 AI智能体连接测试</text>
+    <text class="subtitle">测试小程序与本地Python服务的连接</text>
+  </view>
+
+  <view class="info-box">
+    <view class="info-item">
+      <text class="info-label">API地址：</text>
+      <text class="info-value">{{url}}</text>
+      <button class="copy-btn" size="mini" bindtap="copyUrl">📋 复制</button>
+    </view>
+    
+    <view class="info-item">
+      <text class="info-label">连接状态：</text>
+      <text class="info-value status-{{apiStatus === '服务运行中' ? 'success' : 'error'}}">
+        {{apiStatus}}
+      </text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-header">
+      <text>🔗 基础网络测试</text>
+    </view>
+    <view class="card-content">
+      <text>{{testResult}}</text>
+    </view>
+    <view class="card-actions">
+      <button type="primary" bindtap="testNetwork">开始测试</button>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-header">
+      <text>🤖 AI聊天测试</text>
+    </view>
+    <view class="card-content">
+      <text>测试调用智能体聊天接口</text>
+    </view>
+    <view class="card-actions">
+      <button bindtap="testChat">测试AI聊天</button>
+    </view>
+  </view>
+
+  <view class="instructions">
+    <text class="section-title">📋 使用说明</text>
+    <view class="instruction-item">
+      <text>1. 确保 Python 服务正在运行（终端窗口）</text>
+    </view>
+    <view class="instruction-item">
+      <text>2. 点击「开始测试」检查网络连接</text>
+    </view>
+    <view class="instruction-item">
+      <text>3. 如果连接正常，可以测试AI聊天</text>
+    </view>
+    <view class="instruction-item">
+      <text>4. 测试成功后，进入AI智能体页面使用</text>
+    </view>
+  </view>
+</view>

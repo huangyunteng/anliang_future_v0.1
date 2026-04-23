@@ -3,60 +3,134 @@
   
   <!-- AI智能体主界面 -->
   <view class="ai-agent-container">
-    <!-- AI助手头像 -->
-    <view class="ai-avatar-section">
-      <image class="ai-avatar" src="/images/avatar-ai.png"></image>
-      <text class="ai-name">智演智能体</text>
-      <text class="ai-description">您的专属期货投研助手</text>
-    </view>
-    
-    <!-- 快捷提问 -->
-    <view class="quick-questions-section">
-      <text class="section-title">快捷提问</text>
-      <view class="quick-questions-grid">
-        <block wx:for="{{quickQuestions}}" wx:key="*this">
-          <view class="quick-question-item" data-question="{{item}}" bindtap="onQuickQuestionTap">
-            <text class="question-text">{{item}}</text>
+    <!-- 头部标题区 -->
+    <view class="ai-header-section">
+      <view class="header-top-bar">
+        <view class="back-button" bindtap="onBackTap">
+          <text class="back-icon">‹</text>
+          <text class="back-text">返回</text>
+        </view>
+        <view class="header-title">
+          <text class="ai-name">智演智能体</text>
+          <text class="ai-description">您的专属期货投研助手</text>
+        </view>
+      </view>
+      
+      <!-- 快捷智能体入口 -->
+      <view class="quick-agents-section">
+        <scroll-view class="quick-agents-scroll" scroll-x>
+          <view class="quick-agents-list">
+            <block wx:for="{{hotAgents}}" wx:key="id">
+              <view class="quick-agent-item" data-id="{{item.id}}" bindtap="onQuickAgentTap">
+                <view class="quick-agent-icon" style="background-color: {{item.color}};">
+                  <text class="quick-agent-icon-text">{{item.icon}}</text>
+                </view>
+                <text class="quick-agent-name">{{item.name}}</text>
+              </view>
+            </block>
           </view>
-        </block>
+        </scroll-view>
       </view>
     </view>
     
-    <!-- 对话历史 -->
-    <view class="chat-history-section" wx:if="{{messages.length > 0}}">
-      <text class="section-title">对话历史</text>
-      <scroll-view class="history-scroll" scroll-y>
-        <block wx:for="{{messages}}" wx:key="id">
-          <view class="message-item {{item.role}}">
-            <image class="message-avatar" src="{{item.role === 'user' ? avatarUrl : '/images/avatar-ai.png'}}"></image>
-            <view class="message-content">
-              <text class="message-text">{{item.content}}</text>
-              <text class="message-time">{{item.time}}</text>
-            </view>
+    <!-- 聊天消息区域 -->
+    <view class="chat-messages-section" id="chat-messages">
+      <block wx:if="{{messages.length === 0}}">
+        <!-- 欢迎提示 -->
+        <view class="welcome-message">
+          <view class="welcome-icon">🤖</view>
+          <text class="welcome-title">欢迎使用安粮期货投研助手</text>
+          <text class="welcome-description">我是您的专业期货投研智能体，可以为您提供：</text>
+          <view class="welcome-features">
+            <text class="feature-item">📊 期货品种深度分析</text>
+            <text class="feature-item">🎯 交易策略设计与回测</text>
+            <text class="feature-item">📰 实时市场资讯搜索</text>
+            <text class="feature-item">⚠️ 风险评估与管理建议</text>
+            <text class="feature-item">💰 资金管理与仓位规划</text>
           </view>
+          <text class="welcome-tip">请直接输入您的问题，或点击上方智能体快速提问</text>
+        </view>
+      </block>
+      
+      <!-- 消息列表 -->
+      <block wx:if="{{messages.length > 0}}">
+        <block wx:for="{{messages}}" wx:key="index">
+          <!-- 用户消息 -->
+          <block wx:if="{{item.role === 'user'}}">
+            <view class="message-item user-message">
+              <view class="message-content user-content">
+                <text class="message-text">{{item.content}}</text>
+              </view>
+              <view class="message-avatar user-avatar">
+                <image class="avatar-img" src="{{avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+              </view>
+            </view>
+          </block>
+          
+          <!-- AI消息 -->
+          <block wx:if="{{item.role === 'assistant'}}">
+            <view class="message-item assistant-message">
+              <view class="message-avatar assistant-avatar">
+                <image class="avatar-img" src="/images/avatar-ai.png" mode="aspectFill"></image>
+              </view>
+              <view class="message-content assistant-content">
+                <text class="message-text">{{item.content}}</text>
+                <block wx:if="{{item.agent_used}}">
+                  <view class="message-agent-tag">🤖 {{item.agent_used}}</view>
+                </block>
+                <block wx:if="{{item.suggested_agents && item.suggested_agents.length > 0}}">
+                  <view class="suggested-agents">
+                    <text class="suggested-title">推荐智能体：</text>
+                    <view class="suggested-tags">
+                      <block wx:for="{{item.suggested_agents}}" wx:key="*this">
+                        <text class="suggested-tag" data-agent="{{item}}" bindtap="onSuggestedAgentTap">{{item}}</text>
+                      </block>
+                    </view>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </block>
         </block>
-      </scroll-view>
+      </block>
+      
+      <!-- 加载状态 -->
+      <block wx:if="{{loading}}">
+        <view class="loading-message">
+          <view class="loading-avatar">
+            <image class="avatar-img" src="/images/avatar-ai.png" mode="aspectFill"></image>
+          </view>
+          <view class="loading-content">
+            <view class="loading-dots">
+              <text class="loading-dot">.</text>
+              <text class="loading-dot">.</text>
+              <text class="loading-dot">.</text>
+            </view>
+            <text class="loading-text">智能体思考中</text>
+          </view>
+        </view>
+      </block>
     </view>
     
-    <!-- 开始对话按钮 -->
-    <view class="start-chat-section" wx:if="{{messages.length === 0}}">
-      <button class="start-chat-btn" bindtap="onStartChatTap">
-        <text class="btn-text">开始对话</text>
-      </button>
-    </view>
-    
-    <!-- 模型选择 -->
-    <view class="model-select-section">
-      <text class="section-title">选择AI模型</text>
-      <view class="model-options">
-        <view class="model-option {{selectedModel === 'qianwen' ? 'selected' : ''}}" data-model="qianwen" bindtap="onModelSelect">
-          <text class="model-name">千问（免费）</text>
-          <text class="model-desc">通用问答</text>
-        </view>
-        <view class="model-option {{selectedModel === 'doubao' ? 'selected' : ''}}" data-model="doubao" bindtap="onModelSelect">
-          <text class="model-name">豆包（专业版）</text>
-          <text class="model-desc">深度分析</text>
-        </view>
+    <!-- 输入区域 -->
+    <view class="input-section">
+      <view class="input-container">
+        <input 
+          class="chat-input" 
+          placeholder="请输入您的问题..." 
+          value="{{inputValue}}"
+          bindinput="onInput"
+          bindconfirm="onSend"
+          adjust-position="{{false}}"
+          confirm-type="send"
+          disabled="{{loading}}"
+        />
+        <button class="send-button" bindtap="onSend" disabled="{{loading || !inputValue.trim()}}">
+          <text class="send-icon">{{loading ? '⏳' : '发送'}}</text>
+        </button>
+      </view>
+      <view class="input-tips">
+        <text class="input-tip">支持：期货分析、策略设计、资讯查询、风险计算等</text>
       </view>
     </view>
   </view>

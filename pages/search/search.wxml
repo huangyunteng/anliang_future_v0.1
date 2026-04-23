@@ -1,85 +1,180 @@
 <!-- pages/search/search.wxml -->
 <view class="page-container">
-  <!-- 自定义导航栏 -->
-  <custom-nav 
-    currentTab="{{currentTab}}"
-    statusBarHeight="{{statusBarHeight}}"
-    navigationHeight="{{navigationHeight}}"
-    avatarUrl="{{avatarUrl}}"
-    bind:avatartap="onAvatarTap"
-    bind:tabchange="onTabSwitch"
-    bind:moretap="onMoreTap"
-    bind:browsetap="onBrowseTap"
-  />
   
-  <!-- 搜索页面内容 -->
-  <view class="search-container">
-    <!-- 搜索框 -->
-    <view class="search-bar">
-      <view class="search-input-container">
-        <image class="search-icon" src="/images/icon-search-gray.png"></image>
-        <input 
-          class="search-input"
-          placeholder="搜索研报、文章、活动..."
-          value="{{searchKeyword}}"
-          bindinput="onSearchInput"
-          bindconfirm="onSearchConfirm"
-        />
-        <view wx:if="{{searchKeyword}}" class="clear-btn" bindtap="onClearSearch">
-          <image class="clear-icon" src="/images/icon-close.png"></image>
-        </view>
-      </view>
-      <view class="search-cancel" bindtap="onCancelSearch">取消</view>
+  <!-- 智能体搜索模式 -->
+  <view wx:if="{{isAgentSearch}}" class="agent-search-container">
+    
+    <!-- 搜索主题 -->
+    <view class="search-theme-section">
+      <text class="search-theme-title">
+        <text wx:if="{{searchType === 'agent'}}">{{agentName}} 智能体</text>
+        <text wx:if="{{searchType === 'skill'}}">{{skillName}} 工具</text>
+        <text wx:if="{{!searchType}}">智演智能体</text>
+      </text>
+      <text class="search-query">{{searchQuery}}</text>
     </view>
     
-    <!-- 热门搜索 -->
-    <view class="hot-search-section" wx:if="{{!searchResult.length}}">
-      <text class="section-title">热门搜索</text>
-      <view class="hot-search-tags">
-        <block wx:for="{{hotSearchTags}}" wx:key="*this">
-          <view class="hot-search-tag" data-keyword="{{item}}" bindtap="onHotSearchTap">
-            <text class="tag-text">{{item}}</text>
+    <!-- 思考过程 -->
+    <view class="thinking-section" wx:if="{{thinkingSteps.length > 0}}">
+      <text class="section-title">
+        <text class="thinking-icon">💭</text>
+        思考过程
+      </text>
+      <scroll-view class="thinking-scroll" scroll-y>
+        <block wx:for="{{thinkingSteps}}" wx:key="index">
+          <view class="thinking-step">
+            <view class="step-header">
+              <text class="step-index">步骤 {{index + 1}}</text>
+              <text class="step-time">{{item.time}}</text>
+            </view>
+            <text class="step-content">{{item.content}}</text>
           </view>
         </block>
-      </view>
+      </scroll-view>
     </view>
     
-    <!-- 搜索历史 -->
-    <view class="search-history-section" wx:if="{{!searchResult.length && searchHistory.length}}">
-      <view class="history-header">
-        <text class="section-title">搜索历史</text>
-        <view class="clear-history" bindtap="onClearHistory">
-          <image class="clear-icon" src="/images/icon-clear.png"></image>
-        </view>
-      </view>
-      <view class="history-list">
-        <block wx:for="{{searchHistory}}" wx:key="*this">
-          <view class="history-item" data-keyword="{{item}}" bindtap="onHistorySearchTap">
-            <text class="history-text">{{item}}</text>
-            <image class="history-delete" src="/images/icon-close-small.png"></image>
+    <!-- 搜索过程 -->
+    <view class="process-section" wx:if="{{searchProcess.length > 0}}">
+      <text class="section-title">
+        <text class="process-icon">🔍</text>
+        搜索过程
+      </text>
+      <scroll-view class="process-scroll" scroll-y>
+        <block wx:for="{{searchProcess}}" wx:key="index">
+          <view class="process-item {{item.type}}">
+            <view class="process-header">
+              <text class="process-type">{{item.type === 'web' ? '网页搜索' : item.type === 'data' ? '数据查询' : '技能调用'}}</text>
+              <text class="process-status">{{item.status}}</text>
+            </view>
+            <text class="process-query">{{item.query}}</text>
+            <text wx:if="{{item.result}}" class="process-result">{{item.result}}</text>
           </view>
         </block>
-      </view>
+      </scroll-view>
     </view>
     
     <!-- 搜索结果 -->
-    <view class="search-result-section" wx:if="{{searchResult.length}}">
-      <view class="result-header">
-        <text class="result-count">共找到{{searchResult.length}}个结果</text>
+    <view class="agent-result-section" wx:if="{{finalAnswer}}">
+      <text class="section-title">
+        <text class="result-icon">📋</text>
+        分析结果
+      </text>
+      <view class="final-answer">
+        <text class="answer-text">{{finalAnswer}}</text>
+      </view>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-section" wx:if="{{isLoading}}">
+      <view class="loading-content">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">{{loadingText}}</text>
+      </view>
+    </view>
+    
+    <!-- 底部搜索框 -->
+    <view class="bottom-search-section">
+      <view class="bottom-search-container">
+        <input 
+          class="bottom-search-input" 
+          placeholder="继续提问或输入新问题..."
+          placeholder-class="placeholder"
+          value="{{newQuery}}"
+          bindinput="onNewInput"
+          bindconfirm="onNewSearch"
+          adjust-position="{{false}}"
+          confirm-type="search"
+        />
+        <button class="bottom-search-btn" bindtap="onNewSearch">
+          <text class="search-btn-text">提问</text>
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 普通搜索模式 -->
+  <view wx:else class="normal-search-container">
+    <!-- 自定义导航栏 -->
+    <custom-nav 
+      currentTab="{{currentTab}}"
+      statusBarHeight="{{statusBarHeight}}"
+      navigationHeight="{{navigationHeight}}"
+      avatarUrl="{{avatarUrl}}"
+      bind:avatartap="onAvatarTap"
+      bind:tabchange="onTabSwitch"
+      bind:moretap="onMoreTap"
+      bind:browsetap="onBrowseTap"
+    />
+    
+    <!-- 搜索页面内容 -->
+    <view class="search-container">
+      <!-- 搜索框 -->
+      <view class="search-bar">
+        <view class="search-input-container">
+          <image class="search-icon" src="/images/icon-search-gray.png"></image>
+          <input 
+            class="search-input"
+            placeholder="搜索研报、文章、活动..."
+            value="{{searchKeyword}}"
+            bindinput="onSearchInput"
+            bindconfirm="onSearchConfirm"
+          />
+          <view wx:if="{{searchKeyword}}" class="clear-btn" bindtap="onClearSearch">
+            <image class="clear-icon" src="/images/icon-close.png"></image>
+          </view>
+        </view>
+        <view class="search-cancel" bindtap="onCancelSearch">取消</view>
       </view>
       
-      <view class="result-list">
-        <block wx:for="{{searchResult}}" wx:key="id">
-          <view class="result-item" data-id="{{item.id}}" data-type="{{item.type}}" bindtap="onResultTap">
-            <text class="result-type {{item.type}}">{{item.type === 'report' ? '研报' : item.type === 'article' ? '文章' : '活动'}}</text>
-            <text class="result-title">{{item.title}}</text>
-            <text class="result-summary">{{item.summary}}</text>
-            <view class="result-meta">
-              <text class="meta-item">{{item.author}}</text>
-              <text class="meta-item">{{item.date}}</text>
+      <!-- 热门搜索 -->
+      <view class="hot-search-section" wx:if="{{!searchResult.length}}">
+        <text class="section-title">热门搜索</text>
+        <view class="hot-search-tags">
+          <block wx:for="{{hotSearchTags}}" wx:key="*this">
+            <view class="hot-search-tag" data-keyword="{{item}}" bindtap="onHotSearchTap">
+              <text class="tag-text">{{item}}</text>
             </view>
+          </block>
+        </view>
+      </view>
+      
+      <!-- 搜索历史 -->
+      <view class="search-history-section" wx:if="{{!searchResult.length && searchHistory.length}}">
+        <view class="history-header">
+          <text class="section-title">搜索历史</text>
+          <view class="clear-history" bindtap="onClearHistory">
+            <image class="clear-icon" src="/images/icon-clear.png"></image>
           </view>
-        </block>
+        </view>
+        <view class="history-list">
+          <block wx:for="{{searchHistory}}" wx:key="*this">
+            <view class="history-item" data-keyword="{{item}}" bindtap="onHistorySearchTap">
+              <text class="history-text">{{item}}</text>
+              <image class="history-delete" src="/images/icon-close-small.png"></image>
+            </view>
+          </block>
+        </view>
+      </view>
+      
+      <!-- 搜索结果 -->
+      <view class="search-result-section" wx:if="{{searchResult.length}}">
+        <view class="result-header">
+          <text class="result-count">共找到{{searchResult.length}}个结果</text>
+        </view>
+        
+        <view class="result-list">
+          <block wx:for="{{searchResult}}" wx:key="id">
+            <view class="result-item" data-id="{{item.id}}" data-type="{{item.type}}" bindtap="onResultTap">
+              <text class="result-type {{item.type}}">{{item.type === 'report' ? '研报' : item.type === 'article' ? '文章' : '活动'}}</text>
+              <text class="result-title">{{item.title}}</text>
+              <text class="result-summary">{{item.summary}}</text>
+              <view class="result-meta">
+                <text class="meta-item">{{item.author}}</text>
+                <text class="meta-item">{{item.date}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
       </view>
     </view>
   </view>

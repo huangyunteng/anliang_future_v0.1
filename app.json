@@ -8,7 +8,9 @@
     "pages/report-detail/report-detail",
     "pages/activity-detail/activity-detail",
     "pages/profile/profile",
-    "pages/search/search"
+    "pages/agent-square/agent-square",
+    "pages/search/search",
+    "pages/test-connection/test-connection"
   ],
   "window": {
     "navigationBarBackgroundColor": "#C8102E",

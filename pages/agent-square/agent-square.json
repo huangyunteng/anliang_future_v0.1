@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "智能体广场",
+  "navigationBarBackgroundColor": "#C8102E",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#F5F5F5",
+  "backgroundTextStyle": "dark",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/custom-nav"
+  }
+}

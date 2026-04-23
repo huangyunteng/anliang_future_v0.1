@@ -1,8 +1,9 @@
 {
   "libVersion": "3.15.1",
   "projectname": "miniprogram-mpv-01",
+  "cloudfunctionRoot": "",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "coverView": true,
     "lazyloadPlaceholderEnable": false,
     "skylineRenderEnable": false,
@@ -16,6 +17,13 @@
     "showES6CompileOption": false,
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
-    "bigPackageSizeSupport": false
+    "bigPackageSizeSupport": false,
+    "networkTimeout": {
+      "request": 60000,
+      "connectSocket": 60000,
+      "uploadFile": 60000,
+      "downloadFile": 60000
+    },
+    "appid": "wxda3e16b48757a392"
   }
 }

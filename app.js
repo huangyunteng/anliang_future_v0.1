@@ -11,8 +11,8 @@ App({
     navigationBarHeight: 44,
     capsuleHeight: 0,
     
-    // 网络配置
-    apiBaseUrl: 'http://localhost:3000/api',
+    // 网络配置 - 连接本地智能体服务器
+    apiBaseUrl: 'http://127.0.0.1:8000',
     // 生产环境 (部署时启用)
     // apiBaseUrl: 'https://api.yourdomain.com/api',
     
@@ -61,16 +61,32 @@ App({
   },
 
   onLaunch() {
-    console.log('安粮期货投研智演实验室启动');
-    
+    console.log('CODEBUDDY_DEBUG app onLaunch - app starting')
+    console.log('CODEBUDDY_DEBUG app onLaunch - apiBaseUrl=', this.globalData.apiBaseUrl)
+    console.log('CODEBUDDY_DEBUG app onLaunch - privacy.json check start')
+
+    // 检查 privacy.json 是否存在（通过尝试读取）
+    try {
+      const privacyInfo = require('./privacy.json');
+      console.log('CODEBUDDY_DEBUG app onLaunch - privacy.json loaded successfully')
+    } catch (e) {
+      console.error('CODEBUDDY_DEBUG app onLaunch - privacy.json NOT FOUND or ERROR:', e)
+    }
+
     // 获取系统信息
     this.getSystemInfo();
-    
+
     // 检查登录状态 (游客模式)
+    console.log('CODEBUDDY_DEBUG app onLaunch - step checkLoginStatus start');
     this.checkLoginStatus();
-    
+    console.log('CODEBUDDY_DEBUG app onLaunch - step checkLoginStatus complete');
+
     // 初始化AI配置
+    console.log('CODEBUDDY_DEBUG app onLaunch - step initAIConfig start');
     this.initAIConfig();
+    console.log('CODEBUDDY_DEBUG app onLaunch - step initAIConfig complete');
+
+    console.log('CODEBUDDY_DEBUG app onLaunch - initialization complete, no network requests made yet')
   },
   
   onShow() {
@@ -81,39 +97,58 @@ App({
     console.log('小程序进入后台');
   },
 
+  onError(error) {
+    console.log('CODEBUDDY_DEBUG app onError caught global error:', error);
+    console.log('CODEBUDDY_DEBUG app onError stack:', error.stack);
+  },
+
   // ========== 系统方法 ==========
   
   /**
    * 获取系统信息（使用新的API替代已废弃的wx.getSystemInfoSync）
    */
   getSystemInfo() {
+    console.log('CODEBUDDY_DEBUG getSystemInfo start');
     try {
+      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getWindowInfo');
       // 使用新的API获取窗口信息
       const windowInfo = wx.getWindowInfo();
+      console.log('CODEBUDDY_DEBUG getSystemInfo windowInfo received');
+
+      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getDeviceInfo');
       const deviceInfo = wx.getDeviceInfo();
+      console.log('CODEBUDDY_DEBUG getSystemInfo deviceInfo received');
+
+      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getAppBaseInfo');
       const appBaseInfo = wx.getAppBaseInfo();
-      
+      console.log('CODEBUDDY_DEBUG getSystemInfo appBaseInfo received');
+
       // 合并信息
       const systemInfo = {
         ...windowInfo,
         ...deviceInfo,
         ...appBaseInfo
       };
-      
+
       this.globalData.systemInfo = systemInfo;
       this.globalData.statusBarHeight = windowInfo.statusBarHeight || 20;
-      
+
+      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getMenuButtonBoundingClientRect');
       // 计算胶囊按钮位置信息（用于自定义导航栏）
       const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
+      console.log('CODEBUDDY_DEBUG getSystemInfo menuButtonInfo received', menuButtonInfo);
+
       if (menuButtonInfo) {
         this.globalData.capsuleHeight = menuButtonInfo.height;
         this.globalData.capsuleTop = menuButtonInfo.top;
         this.globalData.capsuleRight = menuButtonInfo.right;
       }
-      
+
       console.log('系统信息获取成功:', systemInfo);
+      console.log('CODEBUDDY_DEBUG getSystemInfo complete success');
     } catch (err) {
       console.error('获取系统信息失败:', err);
+      console.error('CODEBUDDY_DEBUG getSystemInfo catch error:', err);
     }
   },
   
@@ -121,28 +156,39 @@ App({
    * 检查登录状态
    */
   checkLoginStatus() {
-    // 游客模式，暂时不实现登录
-    this.globalData.isLoggedIn = false;
-    this.globalData.userInfo = {
-      nickname: '游客',
-      avatar: '/images/default-avatar.png',
-      vipLevel: 0,
-      memberExpire: ''
-    };
+    console.log('CODEBUDDY_DEBUG checkLoginStatus start - setting guest mode');
+    try {
+      // 游客模式，暂时不实现登录
+      this.globalData.isLoggedIn = false;
+      this.globalData.userInfo = {
+        nickname: '游客',
+        avatar: '/images/default-avatar.png',
+        vipLevel: 0,
+        memberExpire: ''
+      };
+      console.log('CODEBUDDY_DEBUG checkLoginStatus success - userInfo=', this.globalData.userInfo);
+    } catch (err) {
+      console.error('CODEBUDDY_DEBUG checkLoginStatus error:', err);
+    }
   },
   
   /**
    * 初始化AI配置
    */
   initAIConfig() {
-    // 尝试从本地存储读取AI配置
+    console.log('CODEBUDDY_DEBUG initAIConfig start - reading from storage');
     try {
       const savedConfig = wx.getStorageSync('aiConfig');
+      console.log('CODEBUDDY_DEBUG initAIConfig savedConfig=', savedConfig);
       if (savedConfig) {
         Object.assign(this.globalData.aiConfig, savedConfig);
+        console.log('CODEBUDDY_DEBUG initAIConfig merged aiConfig=', this.globalData.aiConfig);
+      } else {
+        console.log('CODEBUDDY_DEBUG initAIConfig no saved config found, using defaults');
       }
+      console.log('CODEBUDDY_DEBUG initAIConfig success');
     } catch (err) {
-      console.error('读取AI配置失败:', err);
+      console.error('CODEBUDDY_DEBUG initAIConfig error:', err);
     }
   },
   
@@ -178,12 +224,18 @@ App({
    * @returns {Promise} 返回Promise对象
    */
   request(options) {
+    console.log('CODEBUDDY_DEBUG app.request called - url=', options.url, 'method=', options.method || 'GET')
+    console.log('CODEBUDDY_DEBUG app.request start timestamp=', Date.now())
+    console.log('CODEBUDDY_DEBUG app.request data=', JSON.stringify(options.data || {}))
     return new Promise((resolve, reject) => {
       // 确保url完整
       let url = options.url;
       if (!url.startsWith('http')) {
         url = `${this.globalData.apiBaseUrl}${url.startsWith('/') ? url : `/${url}`}`;
       }
+
+      console.log('CODEBUDDY_DEBUG app.request final url=', url)
+      console.log('CODEBUDDY_DEBUG app.request final url is localhost/127.0.0.1=', url.includes('127.0.0.1') || url.includes('localhost'))
 
       wx.request({
         url: url,
@@ -193,7 +245,9 @@ App({
           'Content-Type': 'application/json',
           ...options.header
         },
+        timeout: 30000, // 设置30秒超时，AI处理可能需要较长时间
         success: (res) => {
+          console.log('CODEBUDDY_DEBUG app.request success - statusCode=', res.statusCode, 'url=', url, 'duration=', Date.now() - 1572364505000)
           // 统一处理响应状态码
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(res.data);
@@ -213,7 +267,10 @@ App({
           }
         },
         fail: (err) => {
-          console.error('网络请求失败:', err);
+          console.error('CODEBUDDY_DEBUG app.request fail - url=', url, 'error=', err)
+          console.error('CODEBUDDY_DEBUG app.request fail - errMsg=', err.errMsg)
+          console.error('CODEBUDDY_DEBUG app.request fail - url is localhost/127.0.0.1=', url.includes('127.0.0.1') || url.includes('localhost'))
+          console.error('CODEBUDDY_DEBUG app.request fail - duration=', Date.now() - 1572364505000)
           reject({
             code: -1,
             message: '网络连接失败，请检查网络设置',

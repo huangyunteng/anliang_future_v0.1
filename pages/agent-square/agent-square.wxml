@@ -1,0 +1,160 @@
+<!-- pages/agent-square/agent-square.wxml -->
+<view class="page-container">
+  
+  <!-- 自定义导航栏 -->
+  <custom-nav 
+    currentTab="{{currentTab}}"
+    statusBarHeight="{{statusBarHeight}}"
+    navigationHeight="{{navigationHeight}}"
+    avatarUrl="{{avatarUrl}}"
+    bind:avatartap="onAvatarTap"
+    bind:tabchange="onTabSwitch"
+    bind:moretap="onMoreTap"
+    bind:browsetap="onBrowseTap"
+  />
+  
+  <!-- 广场主内容 -->
+  <view class="square-container">
+    <!-- 页面标题 -->
+    <view class="square-header">
+      <text class="square-title">智能体 / 工具skills 广场</text>
+      <text class="square-desc">探索丰富的人工智能工具，提升您的投研效率</text>
+    </view>
+    
+    <!-- 双栏布局 -->
+    <view class="two-column-layout">
+      <!-- 左边栏：智能体 -->
+      <view class="left-column">
+        <view class="column-header">
+          <text class="column-title">智能体</text>
+          <text class="column-count">{{agents.length}}个可用</text>
+        </view>
+        
+        <!-- 智能体分类标签 -->
+        <scroll-view class="category-tags" scroll-x>
+          <view class="tags-list">
+            <block wx:for="{{agentCategories}}" wx:key="value">
+              <view 
+                class="category-tag {{activeAgentCategory === item.value ? 'active' : ''}}" 
+                data-value="{{item.value}}"
+                bindtap="onAgentCategoryTap"
+              >
+                <text class="tag-text">{{item.label}}</text>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+        
+        <!-- 智能体列表 -->
+        <scroll-view class="agents-list-scroll" scroll-y>
+          <view class="agents-list">
+            <block wx:for="{{filteredAgents}}" wx:key="id">
+              <view class="agent-card" data-id="{{item.id}}" bindtap="onAgentCardTap">
+                <view class="agent-card-header">
+                  <view class="agent-icon" style="background-color: {{item.color}};">
+                    <text class="agent-icon-text">{{item.icon}}</text>
+                  </view>
+                  <view class="agent-info">
+                    <text class="agent-name">{{item.name}}</text>
+                    <text class="agent-category">{{item.categoryLabel}}</text>
+                  </view>
+                  <text class="agent-status {{item.status}}">{{item.status === 'online' ? '在线' : '离线'}}</text>
+                </view>
+                <text class="agent-description">{{item.description}}</text>
+                <view class="agent-stats">
+                  <view class="stat-item">
+                    <text class="stat-value">{{item.usageCount}}+</text>
+                    <text class="stat-label">使用次数</text>
+                  </view>
+                  <view class="stat-item">
+                    <text class="stat-value">{{item.rating}}★</text>
+                    <text class="stat-label">评分</text>
+                  </view>
+                  <view class="stat-item">
+                    <text class="stat-value">{{item.responseTime}}s</text>
+                    <text class="stat-label">响应时间</text>
+                  </view>
+                </view>
+                <view class="agent-tags">
+                  <block wx:for="{{item.tags}}" wx:key="*this">
+                    <text class="agent-tag">{{item}}</text>
+                  </block>
+                </view>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+      </view>
+      
+      <!-- 右边栏：工具skills -->
+      <view class="right-column">
+        <view class="column-header">
+          <text class="column-title">工具skills</text>
+          <text class="column-count">{{skills.length}}个可用</text>
+        </view>
+        
+        <!-- 工具分类标签 -->
+        <scroll-view class="category-tags" scroll-x>
+          <view class="tags-list">
+            <block wx:for="{{skillCategories}}" wx:key="value">
+              <view 
+                class="category-tag {{activeSkillCategory === item.value ? 'active' : ''}}" 
+                data-value="{{item.value}}"
+                bindtap="onSkillCategoryTap"
+              >
+                <text class="tag-text">{{item.label}}</text>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+        
+        <!-- 工具skills列表 -->
+        <scroll-view class="skills-list-scroll" scroll-y>
+          <view class="skills-list">
+            <block wx:for="{{filteredSkills}}" wx:key="id">
+              <view class="skill-card" data-id="{{item.id}}" bindtap="onSkillCardTap">
+                <view class="skill-card-header">
+                  <view class="skill-icon" style="background-color: {{item.color}};">
+                    <text class="skill-icon-text">{{item.icon}}</text>
+                  </view>
+                  <view class="skill-info">
+                    <text class="skill-name">{{item.name}}</text>
+                    <text class="skill-category">{{item.categoryLabel}}</text>
+                  </view>
+                  <text class="skill-type">{{item.type === 'free' ? '免费' : '专业'}}</text>
+                </view>
+                <text class="skill-description">{{item.description}}</text>
+                <view class="skill-features">
+                  <block wx:for="{{item.features}}" wx:key="*this">
+                    <view class="feature-item">
+                      <text class="feature-dot">•</text>
+                      <text class="feature-text">{{item}}</text>
+                    </view>
+                  </block>
+                </view>
+                <view class="skill-actions">
+                  <button class="try-btn" data-id="{{item.id}}" bindtap="onTrySkillTap">试用</button>
+                  <button class="detail-btn" data-id="{{item.id}}" bindtap="onSkillDetailTap">详情</button>
+                </view>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+    
+    <!-- 底部导航栏 -->
+    <view class="bottom-tab-bar">
+      <block wx:for="{{tabBarList}}" wx:key="index">
+        <view 
+          class="tab-item {{currentTab === item.key ? 'active' : ''}}" 
+          data-key="{{item.key}}"
+          bindtap="onTabChange"
+        >
+          <image class="tab-icon" src="{{currentTab === item.key ? item.selectedIcon : item.icon}}" mode="widthFix"></image>
+          <text class="tab-text">{{item.text}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>
