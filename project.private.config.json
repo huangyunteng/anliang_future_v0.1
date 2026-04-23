@@ -19,10 +19,10 @@
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false,
     "networkTimeout": {
-      "request": 60000,
-      "connectSocket": 60000,
-      "uploadFile": 60000,
-      "downloadFile": 60000
+      "request": 960000,
+      "connectSocket": 960000,
+      "uploadFile": 960000,
+      "downloadFile": 960000
     },
     "appid": "wxda3e16b48757a392"
   }

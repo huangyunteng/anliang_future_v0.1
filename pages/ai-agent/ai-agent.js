@@ -405,6 +405,8 @@ Page({
    * 发送消息事件（原搜索事件改为发送消息）
    */
   onSend() {
+    console.log('CODEBUDDY_DEBUG onSend函数被调用, inputValue:', this.data.inputValue);
+    console.log('CODEBUDDY_DEBUG loading状态:', this.data.loading);
     const query = this.data.inputValue.trim();
     if (!query) {
       wx.showToast({
@@ -453,12 +455,22 @@ Page({
   async sendMessageToAI(question) {
     console.log('CODEBUDDY_DEBUG ai-agent sendMessageToAI - question:', question);
     
+    // 添加超时保护（960秒，比app.request的960秒相同）
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('请求超时（960秒），请稍后重试或联系技术支持'));
+      }, 960000);
+    });
+
     try {
-      const response = await app.request({
+      const requestPromise = app.request({
         url: '/api/chat',
         method: 'POST',
         data: { question }
       });
+      
+      // 使用Promise.race实现超时控制
+      const response = await Promise.race([requestPromise, timeoutPromise]);
       
       console.log('CODEBUDDY_DEBUG ai-agent sendMessageToAI - response:', response);
       
@@ -504,7 +516,7 @@ Page({
       this.scrollToBottom();
       
       wx.showToast({
-        title: '请求失败，请检查网络连接',
+        title: error.message.includes('超时') ? '请求超时，请稍后重试' : '请求失败，请检查网络连接',
         icon: 'none',
         duration: 2000
       });

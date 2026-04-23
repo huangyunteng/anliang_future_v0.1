@@ -245,7 +245,7 @@ App({
           'Content-Type': 'application/json',
           ...options.header
         },
-        timeout: 30000, // 设置30秒超时，AI处理可能需要较长时间
+        timeout: 960000, // 增加为960秒超时，AI处理和多智能体协调需要更长时间
         success: (res) => {
           console.log('CODEBUDDY_DEBUG app.request success - statusCode=', res.statusCode, 'url=', url, 'duration=', Date.now() - 1572364505000)
           // 统一处理响应状态码

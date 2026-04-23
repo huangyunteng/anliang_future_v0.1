@@ -125,7 +125,7 @@
           confirm-type="send"
           disabled="{{loading}}"
         />
-        <button class="send-button" bindtap="onSend" hover-class="none" disabled="{{loading || !inputValue.trim()}}">
+        <button class="send-button" bindtap="onSend" hover-class="none" disabled="{{loading || !inputValue}}">
           <text class="send-icon">{{loading ? '⏳' : '发送'}}</text>
         </button>
       </view>
