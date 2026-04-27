@@ -27,7 +27,26 @@
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {"type": "glob", "value": "skills/**"},
+      {"type": "glob", "value": "**/*.py"},
+      {"type": "glob", "value": "**/*.pyc"},
+      {"type": "glob", "value": "**/*.bat"},
+      {"type": "glob", "value": "**/*.sh"},
+      {"type": "glob", "value": "**/*.md"},
+      {"type": "glob", "value": "requirements.txt"},
+      {"type": "glob", "value": ".aider*"},
+      {"type": "glob", "value": ".cloudbase/**"},
+      {"type": "glob", "value": "CHECKLIST.md"},
+      {"type": "glob", "value": "deploy.*"},
+      {"type": "glob", "value": "README.md"},
+      {"type": "glob", "value": "test_server.py"},
+      {"type": "glob", "value": "smart_agent_server.py"},
+      {"type": "glob", "value": "agent_*.py"},
+      {"type": "glob", "value": "test.py"},
+      {"type": "glob", "value": "*.log"},
+      {"type": "glob", "value": "*.db"}
+    ],
     "include": []
   },
   "appid": "wxda3e16b48757a392",

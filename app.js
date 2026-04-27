@@ -11,10 +11,15 @@ App({
     navigationBarHeight: 44,
     capsuleHeight: 0,
     
-    // 网络配置 - 连接本地智能体服务器
-    apiBaseUrl: 'http://127.0.0.1:8000',
-    // 生产环境 (部署时启用)
-    // apiBaseUrl: 'https://api.yourdomain.com/api',
+    // 网络配置 - 根据环境切换
+    // 开发环境（本地测试）- 使用ngrok公网地址让老板测试
+    // apiBaseUrl: 'http://127.0.0.1:8000',
+    
+    // cpolar测试环境（老板远程访问）- 填入你的cpolar地址
+    apiBaseUrl: 'https://1029f019.r7.cpolar.cn',  // 改为你的实际cpolar地址
+    
+    // 生产环境（线上部署）- 正式上线时启用
+    // apiBaseUrl: 'https://your-domain.com/api',
     
     // AI配置 (硅基流动平台)
     aiConfig: {

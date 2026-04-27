@@ -17,7 +17,7 @@
     "showES6CompileOption": false,
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
-    "bigPackageSizeSupport": false,
+    "bigPackageSizeSupport": true,
     "networkTimeout": {
       "request": 960000,
       "connectSocket": 960000,
