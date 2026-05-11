@@ -6,6 +6,9 @@ Page({
     // Tab切换
     currentTab: 'recommend', // focus/recommend
     
+    // 自定义TabBar当前索引（0=首页,1=研报,2=AI智能体,3=活动,4=数据）
+    currentTabIndex: 0,
+    
     // 用户头像
     avatarUrl: '',
     
@@ -263,48 +266,25 @@ Page({
   },
 
   onLoad() {
-    console.log('CODEBUDDY_DEBUG index onLoad - page started')
-    console.log('CODEBUDDY_DEBUG index onLoad - checking search bar visibility')
-    console.log('CODEBUDDY_DEBUG index onLoad - checking scrollPaddingTop initial value=', this.data.scrollPaddingTop)
-
-    this.calculateNavigationBarHeight()
-
-    console.log('CODEBUDDY_DEBUG index onLoad - after calculateNavigationBarHeight, scrollPaddingTop=', this.data.scrollPaddingTop)
-    console.log('CODEBUDDY_DEBUG index onLoad - search bar should be visible with padding-top=', this.data.scrollPaddingTop, 'px')
-    console.log('CODEBUDDY_DEBUG index onLoad - statusBarHeight=', this.data.statusBarHeight, 'px')
-    console.log('CODEBUDDY_DEBUG index onLoad - navigationHeight=', this.data.navigationHeight, 'px')
-
-    // 验证所有外部图片URL是否正常
-    const externalImages = [
-      ...this.data.banners.map(b => b.imageUrl),
-      ...this.data.recommendedReports.map(r => r.coverImage),
-      ...this.data.featuredEvents.map(e => e.imageUrl),
-      ...this.data.researchTeam.map(t => t.avatar),
-      ...this.data.publishedBooks.map(b => b.coverImage)
-    ]
-    console.log('CODEBUDDY_DEBUG index onLoad externalImages count=', externalImages.length)
-
-    console.log('中金点睛首页加载')
+    // 异步初始化，避免阻塞
+    setTimeout(() => {
+      this.calculateNavigationBarHeight();
+    }, 100);
 
     // 设置用户头像
-    const app = getApp()
-    const userInfo = app.globalData.userInfo
+    const app = getApp();
+    const userInfo = app.globalData.userInfo;
     if (userInfo && userInfo.avatarUrl) {
-      this.setData({ avatarUrl: userInfo.avatarUrl })
-      console.log('CODEBUDDY_DEBUG index onLoad using user avatarUrl=', userInfo.avatarUrl)
+      this.setData({ avatarUrl: userInfo.avatarUrl });
     } else {
-      // 默认头像 - 使用存在的图片
-      this.setData({ avatarUrl: '/images/avatar-user.png' })
-      console.log('CODEBUDDY_DEBUG index onLoad using default avatar avatar-user.png')
+      this.setData({ avatarUrl: '/images/avatar-user.png' });
     }
-
-    console.log('CODEBUDDY_DEBUG index onLoad - complete, search bar should now be visible')
   },
 
   onShow() {
-    console.log('CODEBUDDY_DEBUG index onShow currentTab=', this.data.currentTab)
     this.setData({
       currentTab: 'recommend',
+      currentTabIndex: 0,
       selectedCalendarDateIndex: 0
     })
   },
@@ -319,18 +299,19 @@ Page({
     }, 1000)
   },
 
-  // 计算导航栏高度（使用新的API）
+  // 计算导航栏高度
   calculateNavigationBarHeight() {
-    const windowInfo = wx.getWindowInfo()
-    const navHeight = windowInfo.statusBarHeight + 44
-    console.log('CODEBUDDY_DEBUG index calculateNavigationBarHeight statusBarHeight=', windowInfo.statusBarHeight)
-    console.log('CODEBUDDY_DEBUG index calculateNavigationBarHeight totalNavHeight=', navHeight)
-    this.setData({
-      statusBarHeight: windowInfo.statusBarHeight,
-      navigationHeight: 44, // 标准导航栏高度
-      scrollPaddingTop: navHeight + 5 // 导航栏高度 + 缩小额外间距
-    })
-    console.log('CODEBUDDY_DEBUG index calculateNavigationBarHeight scrollPaddingTop set to', navHeight + 10)
+    try {
+      const windowInfo = wx.getWindowInfo();
+      const navHeight = windowInfo.statusBarHeight + 44;
+      this.setData({
+        statusBarHeight: windowInfo.statusBarHeight,
+        navigationHeight: 44,
+        scrollPaddingTop: navHeight + 5
+      });
+    } catch (e) {
+      console.error('计算导航栏高度失败:', e);
+    }
   },
 
   // Tab切换事件（支持自定义导航栏组件事件）
@@ -551,5 +532,26 @@ Page({
     wx.navigateTo({
       url: '/pages/browse/history'
     });
+  },
+
+  // 处理自定义TabBar切换
+  onTabChange(e) {
+    const { index, pagePath } = e.detail;
+    console.log('首页Tab切换:', index, pagePath);
+    
+    // 根据索引跳转到对应页面
+    const pages = [
+      '/pages/index/index',
+      '/pages/report/report',
+      '/pages/ai-agent/ai-agent',
+      '/pages/activity/activity',
+      '/pages/data/data'
+    ];
+    
+    if (index !== undefined && index >= 0 && index < pages.length) {
+      wx.reLaunch({
+        url: pages[index]
+      });
+    }
   }
 })

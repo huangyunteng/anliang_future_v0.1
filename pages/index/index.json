@@ -9,6 +9,7 @@
   "navigationStyle": "custom",
   "usingComponents": {
     "custom-nav": "/components/custom-nav/custom-nav",
-    "customer-service-float": "/components/customer-service-float/customer-service-float"
+    "customer-service-float": "/components/customer-service-float/customer-service-float",
+    "custom-tabbar": "/components/custom-tabbar/custom-tabbar"
   }
 }

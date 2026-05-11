@@ -54,4 +54,10 @@
       <text class="empty-text">暂无研报数据</text>
     </view>
   </scroll-view>
+  
+  <!-- 科技感自定义TabBar -->
+  <custom-tabbar 
+    currentTab="{{currentTabIndex}}"
+    bind:tabchange="onTabChange"
+  />
 </view>

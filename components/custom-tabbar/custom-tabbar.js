@@ -1,4 +1,6 @@
 // components/custom-tabbar/custom-tabbar.js
+// 科技感自定义TabBar组件 - 安粮期货投研智演实验室
+
 Component({
   /**
    * 组件的属性列表
@@ -9,39 +11,29 @@ Component({
       type: Number,
       value: 0
     },
-    // Tab配置数组，结构与app.json中的tabBar.list一致
+    // Tab配置数组
     tabs: {
       type: Array,
       value: [
         {
           pagePath: "pages/index/index",
-          text: "首页",
-          iconPath: "/images/tabs/home.png",
-          selectedIconPath: "/images/tabs/home-active.png"
+          text: "推荐"
         },
         {
           pagePath: "pages/report/report",
-          text: "研报",
-          iconPath: "/images/tabs/report.png",
-          selectedIconPath: "/images/tabs/report-active.png"
+          text: "研报"
         },
         {
           pagePath: "pages/ai-agent/ai-agent",
-          text: "AI智能体",
-          iconPath: "/images/tabs/ai-center.png",
-          selectedIconPath: "/images/tabs/ai-center-active.png"
+          text: "智演智能体"
         },
         {
           pagePath: "pages/activity/activity",
-          text: "活动",
-          iconPath: "/images/tabs/activity.png",
-          selectedIconPath: "/images/tabs/activity-active.png"
+          text: "活动"
         },
         {
           pagePath: "pages/data/data",
-          text: "数据",
-          iconPath: "/images/tabs/data.png",
-          selectedIconPath: "/images/tabs/data-active.png"
+          text: "数据"
         }
       ]
     },
@@ -61,7 +53,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-    // 可以添加其他内部数据
+    // 内部状态
   },
 
   /**
@@ -109,6 +101,22 @@ Component({
      */
     setHidden(hidden) {
       this.setData({ hidden });
+    },
+
+    /**
+     * 更新当前Tab（根据页面路径）
+     */
+    updateCurrentTab() {
+      const pages = getCurrentPages();
+      if (pages.length === 0) return;
+      
+      const currentPage = pages[pages.length - 1];
+      const currentPath = '/' + currentPage.route;
+      
+      const tabIndex = this.data.tabs.findIndex(tab => tab.pagePath === currentPath);
+      if (tabIndex !== -1 && tabIndex !== this.data.currentTab) {
+        this.setData({ currentTab: tabIndex });
+      }
     }
   },
 
@@ -117,20 +125,23 @@ Component({
    */
   lifetimes: {
     attached() {
-      // 组件挂载时，如果没有传入safeAreaBottom，尝试获取系统信息
-      if (!this.properties.safeAreaBottom) {
-        const systemInfo = wx.getSystemInfoSync();
-        const { safeArea } = systemInfo;
+      // 组件挂载时，获取系统信息计算底部安全区域
+      try {
+        const windowInfo = wx.getWindowInfo();
+        const safeArea = windowInfo.safeArea;
         
-        // 计算底部安全区域高度
         let safeAreaBottom = 0;
-        if (safeArea && systemInfo.screenHeight) {
-          safeAreaBottom = systemInfo.screenHeight - safeArea.bottom;
+        if (safeArea) {
+          safeAreaBottom = windowInfo.screenHeight - safeArea.bottom;
         }
         
-        // iOS设备通常有安全区域，Android可能为0
         this.setData({
           safeAreaBottom: Math.max(safeAreaBottom, 0)
+        });
+      } catch (e) {
+        console.log('获取安全区域信息失败', e);
+        this.setData({
+          safeAreaBottom: 0
         });
       }
     }
@@ -141,8 +152,8 @@ Component({
    */
   pageLifetimes: {
     show() {
-      // 页面显示时，可以更新当前tab
-      // 这里可以通过页面路径判断当前应该激活哪个tab
+      // 页面显示时更新当前tab
+      this.updateCurrentTab();
     }
   }
 });

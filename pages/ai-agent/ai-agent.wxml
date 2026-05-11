@@ -6,10 +6,6 @@
     <!-- 头部标题区 -->
     <view class="ai-header-section">
       <view class="header-top-bar">
-        <view class="back-button" bindtap="onBackTap">
-          <text class="back-icon">‹</text>
-          <text class="back-text">返回</text>
-        </view>
         <view class="header-title">
           <text class="ai-name">智演智能体</text>
           <text class="ai-description">您的专属期货投研助手</text>
@@ -33,8 +29,42 @@
       </view>
     </view>
     
+    <!-- 历史对话下拉头部 - 横贯全屏 -->
+    <view class="history-header" bindtap="onHistoryTap">
+      <block wx:if="{{!isHistoryExpanded}}">
+        <!-- 收起状态 -->
+        <view class="history-inline-row">
+          <view class="history-indicator"></view>
+          <text class="history-label-inline">历史对话</text>
+          <text class="history-topic-inline">{{lastTopic || '新对话'}}</text>
+          <text class="history-time-inline">{{lastTime || ''}}</text>
+        </view>
+      </block>
+      <block wx:if="{{isHistoryExpanded}}">
+        <!-- 展开状态 -->
+        <view class="history-expanded-header">
+          <view class="history-indicator"></view>
+          <text class="history-label-inline">历史对话</text>
+          <text class="history-topic-inline">{{lastTopic || '新对话'}}</text>
+          <text class="history-time-inline">{{lastTime || ''}}</text>
+        </view>
+        <view class="history-list">
+          <block wx:for="{{historyList}}" wx:key="index">
+            <view class="history-item" data-index="{{index}}" catchtap="onHistoryItemTap">
+              <text class="history-item-topic">{{item.topic}}</text>
+              <text class="history-item-time">{{item.time}}</text>
+              <view class="history-item-delete" catchtap="onDeleteHistory" data-index="{{index}}">✕</view>
+            </view>
+          </block>
+          <block wx:if="{{historyList.length === 0}}">
+            <view class="history-empty">暂无历史对话</view>
+          </block>
+        </view>
+      </block>
+    </view>
+    
     <!-- 聊天消息区域 -->
-    <view class="chat-messages-section" id="chat-messages">
+    <view class="chat-messages-section" id="chat-messages" bindtap="onCollapseHistory">
       <block wx:if="{{messages.length === 0}}">
         <!-- 欢迎提示 -->
         <view class="welcome-message">
@@ -59,7 +89,7 @@
           <block wx:if="{{item.role === 'user'}}">
             <view class="message-item user-message">
               <view class="message-content user-content">
-                <text class="message-text">{{item.content}}</text>
+                <text class="message-text" user-select="{{true}}">{{item.content}}</text>
               </view>
               <view class="message-avatar user-avatar">
                 <image class="avatar-img" src="{{avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
@@ -74,7 +104,7 @@
                 <image class="avatar-img" src="/images/avatar-ai.png" mode="aspectFill"></image>
               </view>
               <view class="message-content assistant-content">
-                <text class="message-text">{{item.content}}</text>
+                <text class="message-text" user-select="{{true}}">{{item.content}}</text>
                 <block wx:if="{{item.agent_used}}">
                   <view class="message-agent-tag">🤖 {{item.agent_used}}</view>
                 </block>
@@ -111,27 +141,33 @@
         </view>
       </block>
     </view>
-    
-    <!-- 输入区域 -->
-    <view class="input-section">
-      <view class="input-container">
-        <input 
-          class="chat-input" 
-          placeholder="请输入您的问题..." 
-          value="{{inputValue}}"
-          bindinput="onInput"
-          bindconfirm="onSend"
-          adjust-position="{{false}}"
-          confirm-type="send"
-          disabled="{{loading}}"
-        />
-        <button class="send-button" bindtap="onSend" hover-class="none" disabled="{{loading || !inputValue}}">
-          <text class="send-icon">{{loading ? '⏳' : '发送'}}</text>
-        </button>
-      </view>
-      <view class="input-tips">
-        <text class="input-tip">支持：期货分析、策略设计、资讯查询、风险计算等</text>
-      </view>
+  </view>
+  
+  <!-- 输入区域 - 放在TabBar上方 -->
+  <view class="input-section" bindtap="onCollapseHistory">
+    <view class="input-container">
+      <input 
+        class="chat-input" 
+        placeholder="请输入您的问题..." 
+        value="{{inputValue}}"
+        bindinput="onInput"
+        bindconfirm="onSend"
+        adjust-position="{{false}}"
+        confirm-type="send"
+        disabled="{{loading}}"
+      />
+      <button class="send-button" bindtap="onSend" hover-class="none" disabled="{{loading || !inputValue}}">
+        <text class="send-icon">{{loading ? '⏳' : '发送'}}</text>
+      </button>
+    </view>
+    <view class="input-tips">
+      <text class="input-tip">支持：期货分析、策略设计、资讯查询、风险计算等</text>
     </view>
   </view>
+  
+  <!-- 科技感自定义TabBar -->
+  <custom-tabbar 
+    currentTab="{{currentTabIndex}}"
+    bind:tabchange="onTabChange"
+  />
 </view>

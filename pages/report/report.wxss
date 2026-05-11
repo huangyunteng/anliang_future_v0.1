@@ -5,8 +5,9 @@
 }
 
 .content-scroll {
-  height: calc(100vh - env(safe-area-inset-bottom));
+  height: calc(100vh - env(safe-area-inset-bottom) - 70px);
   padding-top: 0;
+  padding-bottom: 70px;
 }
 
 .page-header {

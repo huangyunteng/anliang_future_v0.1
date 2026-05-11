@@ -13,6 +13,9 @@ Page({
     navigationHeight: 44,
     avatarUrl: '',
     
+    // 自定义TabBar当前索引
+    currentTabIndex: 1,
+    
     // 研报数据
     reports: [],
     loading: false,
@@ -34,8 +37,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 页面显示时，可以更新数据
-    // 系统TabBar会自动管理选中状态，无需手动设置
+    // 更新当前TabBar状态
+    this.setData({ currentTabIndex: 1 });
   },
 
   /**
@@ -164,5 +167,25 @@ Page({
    */
   onLoadMore() {
     this.loadMoreReports();
+  },
+
+  // 处理自定义TabBar切换
+  onTabChange(e) {
+    const { index, pagePath } = e.detail;
+    console.log('研报页Tab切换:', index, pagePath);
+    
+    const pages = [
+      '/pages/index/index',
+      '/pages/report/report',
+      '/pages/ai-agent/ai-agent',
+      '/pages/activity/activity',
+      '/pages/data/data'
+    ];
+    
+    if (index !== undefined && index >= 0 && index < pages.length) {
+      wx.reLaunch({
+        url: pages[index]
+      });
+    }
   }
 });

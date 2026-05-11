@@ -19,41 +19,11 @@
 
 .header-top-bar {
   display: flex;
-  align-items: center;
+  justify-content: center;
   margin-bottom: 16px;
 }
 
-.back-button {
-  display: flex;
-  align-items: center;
-  padding: 6px 12px;
-  margin-right: 12px;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.2);
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-
-.back-button:active {
-  background-color: rgba(255, 255, 255, 0.3);
-  transform: scale(0.98);
-}
-
-.back-icon {
-  font-size: 28px;
-  color: #FFFFFF;
-  line-height: 1;
-  margin-right: 2px;
-}
-
-.back-text {
-  font-size: 15px;
-  color: #FFFFFF;
-  font-weight: 500;
-}
-
 .header-title {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -442,8 +412,126 @@
 
 /* 聊天消息区域 */
 .chat-messages-section {
-  padding: 0 16px 20px;
+  padding: 0 16px;
+  padding-bottom: 160px; /* 给输入区域和TabBar留出空间 */
   min-height: 300px;
+}
+
+/* 历史对话下拉头部 - 横贯全屏 */
+.history-header {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E0E0E0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+}
+
+.history-inline-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.history-indicator {
+  width: 4px;
+  height: 16px;
+  background: linear-gradient(180deg, #C8102E 0%, #D9364E 100%);
+  border-radius: 2px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.history-label-inline {
+  font-size: 12px;
+  color: #999999;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.history-topic-inline {
+  font-size: 14px;
+  color: #333333;
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-time-inline {
+  font-size: 12px;
+  color: #999999;
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+/* 展开状态 */
+.history-expanded-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #F0F0F0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.history-list {
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #F0F0F0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item-topic {
+  font-size: 14px;
+  color: #333333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 12px;
+}
+
+.history-item-time {
+  font-size: 12px;
+  color: #999999;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.history-item-delete {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #C8102E;
+  color: #FFFFFF;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.history-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #999999;
 }
 
 /* 欢迎消息 */
@@ -516,11 +604,13 @@
 }
 
 .user-message {
-  justify-content: flex-end;
+  justify-content: flex-end !important;
+  flex-direction: row !important;
 }
 
 .assistant-message {
-  justify-content: flex-start;
+  justify-content: flex-start !important;
+  flex-direction: row !important;
 }
 
 .message-avatar {
@@ -532,13 +622,13 @@
 }
 
 .user-avatar {
-  order: 2;
   margin-left: 12px;
+  margin-right: 0;
 }
 
 .assistant-avatar {
-  order: 1;
   margin-right: 12px;
+  margin-left: 0;
 }
 
 .avatar-img {
@@ -667,27 +757,27 @@
   color: #666666;
 }
 
-/* 输入区域 */
+/* 输入区域 - 固定在TabBar上方 */
 .input-section {
   position: fixed;
-  bottom: 0;
+  bottom: 75px;
   left: 0;
   right: 0;
   background-color: #FFFFFF;
-  padding: 16px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  padding: 12px 16px 25px;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  z-index: 998;
 }
 
 .input-container {
   display: flex;
   align-items: center;
   background-color: #F8F8F8;
-  border-radius: 24px;
-  padding: 0 16px;
+  border-radius: 21px;
+  padding: 0 10px;
   border: 1px solid #E0E0E0;
   transition: all 0.2s;
+  height: 40px;
 }
 
 .input-container:focus-within {
@@ -698,8 +788,9 @@
 
 .chat-input {
   flex: 1;
-  height: 48px;
-  font-size: 16px;
+  min-width: 0;
+  height: 42px;
+  font-size: 15px;
   color: #333333;
   padding: 0;
   background: transparent;
@@ -714,18 +805,21 @@
 }
 
 .send-button {
-  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
-  color: #FFFFFF;
-  border-radius: 20px;
-  padding: 0 20px;
-  height: 36px;
-  line-height: 36px;
-  font-size: 14px;
-  font-weight: 500;
-  box-shadow: 0 2px 6px rgba(200, 16, 46, 0.3);
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%) !important;
+  color: #FFFFFF !important;
+  border-radius: 16px !important;
+  padding: 0 4px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 2px 6px rgba(200, 16, 46, 0.3) !important;
   transition: all 0.2s;
-  margin: 0;
-  margin-left: 8px;
+  margin: 0 !important;
+  margin-left: 8px !important;
   flex-shrink: 0;
 }
 
@@ -743,13 +837,14 @@
 }
 
 .send-icon {
-  color: #FFFFFF;
-  font-size: 14px;
-  font-weight: 500;
+  color: #FFFFFF !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
 }
 
 .input-tips {
-  margin-top: 8px;
+  margin-top: 4px;
+  margin-bottom: 12px;
   text-align: center;
 }
 

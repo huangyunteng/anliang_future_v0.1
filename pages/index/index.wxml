@@ -424,4 +424,10 @@
 
   <!-- 兔耳朵美女客服浮窗 -->
   <customer-service-float show="{{true}}"></customer-service-float>
+  
+  <!-- 科技感自定义TabBar -->
+  <custom-tabbar 
+    currentTab="{{currentTabIndex}}"
+    bind:tabchange="onTabChange"
+  />
 </view>

@@ -79,4 +79,10 @@
       <text class="load-more-text">{{loading ? '加载中...' : '加载更多'}}</text>
     </view>
   </scroll-view>
+  
+  <!-- 科技感自定义TabBar -->
+  <custom-tabbar 
+    currentTab="{{currentTabIndex}}"
+    bind:tabchange="onTabChange"
+  />
 </view>

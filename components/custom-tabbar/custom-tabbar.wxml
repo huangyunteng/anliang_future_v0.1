@@ -1,23 +1,22 @@
 <!-- components/custom-tabbar/custom-tabbar.wxml -->
-<!-- 自定义TabBar组件（中金点睛风格） -->
+<!-- 科技感自定义TabBar组件 -->
 <view class="custom-tabbar" style="padding-bottom: {{safeAreaBottom}}px;">
+  <!-- 顶部科技感光线 -->
+  <view class="tech-glow-line"></view>
+  
   <!-- TabBar内容 -->
   <view class="tabbar-content">
     
-    <!-- 首页 -->
+    <!-- 首页 - 推荐 -->
     <view 
       class="tabbar-item {{currentTab === 0 ? 'active' : ''}}" 
       data-index="0"
       bindtap="onTabTap"
     >
       <view class="item-icon">
-        <image 
-          class="icon" 
-          src="{{currentTab === 0 ? tabs[0].selectedIconPath : tabs[0].iconPath}}" 
-          mode="aspectFit"
-        />
+        <image class="tab-icon" src="https://api.iconify.design/mdi:home-variant-outline.svg" mode="aspectFit"/>
       </view>
-      <view class="item-text">{{tabs[0].text}}</view>
+      <view class="item-text">推荐</view>
     </view>
     
     <!-- 研报 -->
@@ -27,16 +26,12 @@
       bindtap="onTabTap"
     >
       <view class="item-icon">
-        <image 
-          class="icon" 
-          src="{{currentTab === 1 ? tabs[1].selectedIconPath : tabs[1].iconPath}}" 
-          mode="aspectFit"
-        />
+        <image class="tab-icon" src="https://api.iconify.design/mdi:file-document-outline.svg" mode="aspectFit"/>
       </view>
-      <view class="item-text">{{tabs[1].text}}</view>
+      <view class="item-text">研报</view>
     </view>
     
-    <!-- 中间的AI智能体（突出显示） -->
+    <!-- 中间的AI智能体 -->
     <view 
       class="tabbar-item tabbar-item-middle {{currentTab === 2 ? 'active' : ''}}" 
       data-index="2"
@@ -44,13 +39,9 @@
     >
       <view class="middle-container">
         <view class="middle-icon-wrapper">
-          <image 
-            class="middle-icon" 
-            src="{{currentTab === 2 ? tabs[2].selectedIconPath : tabs[2].iconPath}}" 
-            mode="aspectFit"
-          />
+          <image class="middle-icon-img" src="https://api.iconify.design/mdi:robot-outline.svg" mode="aspectFit"/>
         </view>
-        <view class="middle-text">{{tabs[2].text}}</view>
+        <view class="middle-text">智演智能体</view>
       </view>
     </view>
     
@@ -61,29 +52,21 @@
       bindtap="onTabTap"
     >
       <view class="item-icon">
-        <image 
-          class="icon" 
-          src="{{currentTab === 3 ? tabs[3].selectedIconPath : tabs[3].iconPath}}" 
-          mode="aspectFit"
-        />
+        <image class="tab-icon" src="https://api.iconify.design/mdi:calendar-blank-outline.svg" mode="aspectFit"/>
       </view>
-      <view class="item-text">{{tabs[3].text}}</view>
+      <view class="item-text">活动</view>
     </view>
     
     <!-- 数据 -->
     <view 
-      class="tabbar-item {{currentTab === 3 ? 'active' : ''}}" 
+      class="tabbar-item {{currentTab === 4 ? 'active' : ''}}" 
       data-index="4"
       bindtap="onTabTap"
     >
       <view class="item-icon">
-        <image 
-          class="icon" 
-          src="{{currentTab === 4 ? tabs[4].selectedIconPath : tabs[4].iconPath}}" 
-          mode="aspectFit"
-        />
+        <image class="tab-icon" src="https://api.iconify.design/mdi:chart-line-variant.svg" mode="aspectFit"/>
       </view>
-      <view class="item-text">{{tabs[4].text}}</view>
+      <view class="item-text">数据</view>
     </view>
     
   </view>

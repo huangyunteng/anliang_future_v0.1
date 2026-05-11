@@ -13,6 +13,9 @@ Page({
     navigationHeight: 44,
     avatarUrl: '',
     
+    // 自定义TabBar当前索引
+    currentTabIndex: 4,
+    
     // 市场数据
     marketData: {
       shIndex: { value: 3200.45, change: 0.85 },
@@ -51,7 +54,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 系统TabBar会自动管理选中状态
+    // 更新当前TabBar状态
+    this.setData({ currentTabIndex: 4 });
   },
 
   /**
@@ -262,5 +266,25 @@ Page({
       title: '安粮期货投研智演实验室 - 数据中心',
       path: '/pages/data/data'
     };
+  },
+
+  // 处理自定义TabBar切换
+  onTabChange(e) {
+    const { index, pagePath } = e.detail;
+    console.log('数据页Tab切换:', index, pagePath);
+    
+    const pages = [
+      '/pages/index/index',
+      '/pages/report/report',
+      '/pages/ai-agent/ai-agent',
+      '/pages/activity/activity',
+      '/pages/data/data'
+    ];
+    
+    if (index !== undefined && index >= 0 && index < pages.length) {
+      wx.reLaunch({
+        url: pages[index]
+      });
+    }
   }
 });

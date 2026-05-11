@@ -152,4 +152,10 @@
       </view>
     </view>
   </scroll-view>
+  
+  <!-- 科技感自定义TabBar -->
+  <custom-tabbar 
+    currentTab="{{currentTabIndex}}"
+    bind:tabchange="onTabChange"
+  />
 </view>

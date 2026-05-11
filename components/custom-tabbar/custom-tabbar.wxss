@@ -1,20 +1,24 @@
 /* components/custom-tabbar/custom-tabbar.wxss */
+/* 科技感主题 - 安粮期货投研智演实验室 */
+
+/* ========== 基础样式 ========== */
 .custom-tabbar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 999;
-  background-color: #FFFFFF;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8F8F8 100%);
+  box-shadow: 0 -4px 20px rgba(200, 16, 46, 0.08);
 }
 
 .tabbar-content {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-around;
-  height: 50px;
+  height: 60px;
   position: relative;
+  padding: 0 10px;
 }
 
 .tabbar-item {
@@ -24,88 +28,183 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  padding-bottom: 8px;
 }
 
 .tabbar-item-middle {
-  flex: 1;
+  flex: 1.3;
   position: relative;
   z-index: 10;
 }
 
+/* ========== 图标样式 ========== */
 .item-icon {
-  width: 24px;
-  height: 24px;
-  margin-bottom: 4px;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.item-icon .icon {
-  width: 100%;
-  height: 100%;
+.tab-icon {
+  width: 26px;
+  height: 26px;
+  transition: all 0.3s ease;
+  filter: grayscale(100%) opacity(0.6);
+}
+
+.tabbar-item.active .tab-icon {
+  filter: grayscale(0%) opacity(1) drop-shadow(0 0 6px rgba(200, 16, 46, 0.6));
+  transform: scale(1.15);
 }
 
 .item-text {
   font-size: 10px;
   color: #999999;
   line-height: 1.2;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .tabbar-item.active .item-text {
   color: #C8102E;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* 中间按钮样式 */
+/* ========== 科技感顶部光线 ========== */
+.tech-glow-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    #C8102E 20%, 
+    #FF3050 50%, 
+    #C8102E 80%, 
+    transparent 100%
+  );
+  opacity: 0.6;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ========== 中间AI智能体图标 ========== */
 .middle-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-  top: -15px; /* 向上突出 */
+  top: 15px;
+  padding-bottom: 0;
 }
 
 .middle-icon-wrapper {
-  width: 56px;
-  height: 56px;
-  border-radius: 28px;
-  background: linear-gradient(135deg, #C8102E 0%, #D9364E 100%);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C8102E 0%, #D9364E 50%, #E85060 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3);
-  margin-bottom: 4px;
-  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 20px rgba(200, 16, 46, 0.5),
+    0 0 40px rgba(200, 16, 46, 0.25),
+    inset 0 2px 10px rgba(255, 255, 255, 0.25);
+  margin-bottom: 6px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow: hidden;
+}
+
+.middle-icon-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
 }
 
 .tabbar-item-middle.active .middle-icon-wrapper {
-  background: linear-gradient(135deg, #B00E28 0%, #C8102E 100%);
-  box-shadow: 0 6px 16px rgba(200, 16, 46, 0.4);
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #A00D25 0%, #C8102E 50%, #D9364E 100%);
+  box-shadow: 
+    0 6px 30px rgba(200, 16, 46, 0.7),
+    0 0 60px rgba(200, 16, 46, 0.4),
+    inset 0 3px 15px rgba(255, 255, 255, 0.35);
+  transform: scale(1.1);
+  border-color: white;
 }
 
-.middle-icon {
-  width: 28px;
-  height: 28px;
+.middle-icon-img {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  z-index: 1;
+  filter: brightness(0) invert(1) drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+  transition: all 0.3s ease;
+}
+
+.tabbar-item-middle.active .middle-icon-img {
+  animation: robotBounce 1s ease-in-out infinite;
+}
+
+@keyframes robotBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 .middle-text {
   font-size: 10px;
   color: #C8102E;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 0.5px;
 }
 
 .tabbar-item-middle.active .middle-text {
-  color: #B00E28;
+  color: #A00D25;
+  text-shadow: 0 0 10px rgba(200, 16, 46, 0.3);
 }
 
-/* 安全区域适配 */
+/* ========== 激活状态的通用效果 ========== */
+.tabbar-item.active {
+  transform: translateY(-3px);
+}
+
+/* ========== 安全区域适配 ========== */
 .custom-tabbar {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ========== 响应式调整 ========== */
+@media (max-width: 320px) {
+  .middle-icon-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .middle-icon-img {
+    width: 26px;
+    height: 26px;
+  }
 }

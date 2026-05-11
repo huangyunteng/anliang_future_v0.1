@@ -66,69 +66,31 @@ App({
   },
 
   onLaunch() {
-    console.log('CODEBUDDY_DEBUG app onLaunch - app starting')
-    console.log('CODEBUDDY_DEBUG app onLaunch - apiBaseUrl=', this.globalData.apiBaseUrl)
-    console.log('CODEBUDDY_DEBUG app onLaunch - privacy.json check start')
-
-    // 检查 privacy.json 是否存在（通过尝试读取）
-    try {
-      const privacyInfo = require('./privacy.json');
-      console.log('CODEBUDDY_DEBUG app onLaunch - privacy.json loaded successfully')
-    } catch (e) {
-      console.error('CODEBUDDY_DEBUG app onLaunch - privacy.json NOT FOUND or ERROR:', e)
-    }
-
-    // 获取系统信息
     this.getSystemInfo();
-
-    // 检查登录状态 (游客模式)
-    console.log('CODEBUDDY_DEBUG app onLaunch - step checkLoginStatus start');
     this.checkLoginStatus();
-    console.log('CODEBUDDY_DEBUG app onLaunch - step checkLoginStatus complete');
-
-    // 初始化AI配置
-    console.log('CODEBUDDY_DEBUG app onLaunch - step initAIConfig start');
     this.initAIConfig();
-    console.log('CODEBUDDY_DEBUG app onLaunch - step initAIConfig complete');
-
-    console.log('CODEBUDDY_DEBUG app onLaunch - initialization complete, no network requests made yet')
   },
   
   onShow() {
-    console.log('小程序进入前台');
+    // 小程序进入前台
   },
   
   onHide() {
-    console.log('小程序进入后台');
+    // 小程序进入后台
   },
 
   onError(error) {
-    console.log('CODEBUDDY_DEBUG app onError caught global error:', error);
-    console.log('CODEBUDDY_DEBUG app onError stack:', error.stack);
+    console.error('应用错误:', error);
   },
 
   // ========== 系统方法 ==========
   
-  /**
-   * 获取系统信息（使用新的API替代已废弃的wx.getSystemInfoSync）
-   */
   getSystemInfo() {
-    console.log('CODEBUDDY_DEBUG getSystemInfo start');
     try {
-      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getWindowInfo');
-      // 使用新的API获取窗口信息
       const windowInfo = wx.getWindowInfo();
-      console.log('CODEBUDDY_DEBUG getSystemInfo windowInfo received');
-
-      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getDeviceInfo');
       const deviceInfo = wx.getDeviceInfo();
-      console.log('CODEBUDDY_DEBUG getSystemInfo deviceInfo received');
-
-      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getAppBaseInfo');
       const appBaseInfo = wx.getAppBaseInfo();
-      console.log('CODEBUDDY_DEBUG getSystemInfo appBaseInfo received');
 
-      // 合并信息
       const systemInfo = {
         ...windowInfo,
         ...deviceInfo,
@@ -138,32 +100,19 @@ App({
       this.globalData.systemInfo = systemInfo;
       this.globalData.statusBarHeight = windowInfo.statusBarHeight || 20;
 
-      console.log('CODEBUDDY_DEBUG getSystemInfo calling wx.getMenuButtonBoundingClientRect');
-      // 计算胶囊按钮位置信息（用于自定义导航栏）
       const menuButtonInfo = wx.getMenuButtonBoundingClientRect();
-      console.log('CODEBUDDY_DEBUG getSystemInfo menuButtonInfo received', menuButtonInfo);
-
       if (menuButtonInfo) {
         this.globalData.capsuleHeight = menuButtonInfo.height;
         this.globalData.capsuleTop = menuButtonInfo.top;
         this.globalData.capsuleRight = menuButtonInfo.right;
       }
-
-      console.log('系统信息获取成功:', systemInfo);
-      console.log('CODEBUDDY_DEBUG getSystemInfo complete success');
     } catch (err) {
       console.error('获取系统信息失败:', err);
-      console.error('CODEBUDDY_DEBUG getSystemInfo catch error:', err);
     }
   },
   
-  /**
-   * 检查登录状态
-   */
   checkLoginStatus() {
-    console.log('CODEBUDDY_DEBUG checkLoginStatus start - setting guest mode');
     try {
-      // 游客模式，暂时不实现登录
       this.globalData.isLoggedIn = false;
       this.globalData.userInfo = {
         nickname: '游客',
@@ -171,29 +120,19 @@ App({
         vipLevel: 0,
         memberExpire: ''
       };
-      console.log('CODEBUDDY_DEBUG checkLoginStatus success - userInfo=', this.globalData.userInfo);
     } catch (err) {
-      console.error('CODEBUDDY_DEBUG checkLoginStatus error:', err);
+      console.error('检查登录状态失败:', err);
     }
   },
   
-  /**
-   * 初始化AI配置
-   */
   initAIConfig() {
-    console.log('CODEBUDDY_DEBUG initAIConfig start - reading from storage');
     try {
       const savedConfig = wx.getStorageSync('aiConfig');
-      console.log('CODEBUDDY_DEBUG initAIConfig savedConfig=', savedConfig);
       if (savedConfig) {
         Object.assign(this.globalData.aiConfig, savedConfig);
-        console.log('CODEBUDDY_DEBUG initAIConfig merged aiConfig=', this.globalData.aiConfig);
-      } else {
-        console.log('CODEBUDDY_DEBUG initAIConfig no saved config found, using defaults');
       }
-      console.log('CODEBUDDY_DEBUG initAIConfig success');
     } catch (err) {
-      console.error('CODEBUDDY_DEBUG initAIConfig error:', err);
+      console.error('初始化AI配置失败:', err);
     }
   },
   
@@ -229,19 +168,13 @@ App({
    * @returns {Promise} 返回Promise对象
    */
   request(options) {
-    console.log('CODEBUDDY_DEBUG app.request called - url=', options.url, 'method=', options.method || 'GET')
-    console.log('CODEBUDDY_DEBUG app.request start timestamp=', Date.now())
-    console.log('CODEBUDDY_DEBUG app.request data=', JSON.stringify(options.data || {}))
+    // 确保url完整
+    let url = options.url;
+    if (!url.startsWith('http')) {
+      url = `${this.globalData.apiBaseUrl}${url.startsWith('/') ? url : `/${url}`}`;
+    }
+
     return new Promise((resolve, reject) => {
-      // 确保url完整
-      let url = options.url;
-      if (!url.startsWith('http')) {
-        url = `${this.globalData.apiBaseUrl}${url.startsWith('/') ? url : `/${url}`}`;
-      }
-
-      console.log('CODEBUDDY_DEBUG app.request final url=', url)
-      console.log('CODEBUDDY_DEBUG app.request final url is localhost/127.0.0.1=', url.includes('127.0.0.1') || url.includes('localhost'))
-
       wx.request({
         url: url,
         method: options.method || 'GET',
@@ -250,14 +183,12 @@ App({
           'Content-Type': 'application/json',
           ...options.header
         },
-        timeout: 960000, // 增加为960秒超时，AI处理和多智能体协调需要更长时间
+        timeout: 60000, // 60秒超时
         success: (res) => {
-          console.log('CODEBUDDY_DEBUG app.request success - statusCode=', res.statusCode, 'url=', url, 'duration=', Date.now() - 1572364505000)
           // 统一处理响应状态码
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(res.data);
           } else if (res.statusCode === 401) {
-            console.warn('接口返回401，需要登录');
             reject({
               code: 401,
               message: '访问未授权，请先登录',
@@ -272,10 +203,11 @@ App({
           }
         },
         fail: (err) => {
-          console.error('CODEBUDDY_DEBUG app.request fail - url=', url, 'error=', err)
-          console.error('CODEBUDDY_DEBUG app.request fail - errMsg=', err.errMsg)
-          console.error('CODEBUDDY_DEBUG app.request fail - url is localhost/127.0.0.1=', url.includes('127.0.0.1') || url.includes('localhost'))
-          console.error('CODEBUDDY_DEBUG app.request fail - duration=', Date.now() - 1572364505000)
+          // 简化错误信息，避免控制台刷屏
+          const errorMsg = err.errMsg || '网络连接失败';
+          if (!errorMsg.includes('abort')) { // 忽略取消请求的错误
+            console.error('请求失败:', url, errorMsg);
+          }
           reject({
             code: -1,
             message: '网络连接失败，请检查网络设置',

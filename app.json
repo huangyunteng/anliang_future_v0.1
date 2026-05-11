@@ -20,48 +20,7 @@
     "backgroundTextStyle": "light",
     "navigationStyle": "default"
   },
-  "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#C8102E",
-    "backgroundColor": "#FFFFFF",
-    "borderStyle": "black",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "推荐",
-        "iconPath": "images/tabs/home.png",
-        "selectedIconPath": "images/tabs/home-active.png"
-      },
-      {
-        "pagePath": "pages/report/report",
-        "text": "研报",
-        "iconPath": "images/tabs/report.png",
-        "selectedIconPath": "images/tabs/report-active.png"
-      },
-      {
-        "pagePath": "pages/ai-agent/ai-agent",
-        "text": "智演智能体",
-        "iconPath": "images/tabs/ai.png",
-        "selectedIconPath": "images/tabs/ai-active.png"
-      },
-      {
-        "pagePath": "pages/activity/activity",
-        "text": "活动",
-        "iconPath": "images/tabs/activity.png",
-        "selectedIconPath": "images/tabs/activity-active.png"
-      },
-      {
-        "pagePath": "pages/data/data",
-        "text": "数据",
-        "iconPath": "images/tabs/data.png",
-        "selectedIconPath": "images/tabs/data-active.png"
-      }
-    ]
-  },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents",
-  "requiredPrivateInfos": [
-    "getLocation"
-  ]
+  "lazyCodeLoading": "requiredComponents"
 }
