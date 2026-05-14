@@ -111,8 +111,8 @@
 }
 
 .middle-icon-wrapper {
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: linear-gradient(135deg, #C8102E 0%, #D9364E 50%, #E85060 100%);
   display: flex;
@@ -156,8 +156,8 @@
 }
 
 .middle-icon-img {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   position: relative;
   z-index: 1;
   filter: brightness(0) invert(1) drop-shadow(0 2px 3px rgba(0,0,0,0.2));
@@ -199,12 +199,12 @@
 /* ========== 响应式调整 ========== */
 @media (max-width: 320px) {
   .middle-icon-wrapper {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
   
   .middle-icon-img {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 }

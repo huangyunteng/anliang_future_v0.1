@@ -1,0 +1,64 @@
+<!-- pages/report-list/report-list.wxml - 研报完整列表页面 -->
+<view class="page-container">
+  <!-- 页面标题栏 -->
+  <view class="page-header">
+    <view class="header-left" bindtap="onBack">
+      <view class="back-icon"></view>
+    </view>
+    <text class="header-title">{{categoryName}}</text>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- 研报列表 -->
+  <scroll-view 
+    class="report-scroll" 
+    scroll-y
+    bindscrolltolower="onLoadMore"
+  >
+    <view class="report-list">
+      <block wx:for="{{reportList}}" wx:key="id">
+        <view class="report-card" data-id="{{item.id}}" bindtap="onReportTap">
+          <!-- 分类标签 -->
+          <view class="report-category-tag">
+            <text class="category-tag-text">{{item.category}}</text>
+          </view>
+          <!-- 标题 -->
+          <text class="report-title">{{item.title}}</text>
+          <!-- 底部信息 -->
+          <view class="report-meta">
+            <view class="report-meta-left">
+              <text class="report-author">{{item.author}}</text>
+              <text class="report-separator">|</text>
+              <text class="report-views">浏览量：{{item.views}}</text>
+            </view>
+            <text class="report-date">发布日期：{{item.date}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMore && !loading}}" bindtap="onLoadMore">
+      <text class="load-more-text">加载更多</text>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading-more" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 没有更多了 -->
+    <view class="no-more" wx:if="{{!hasMore && reportList.length > 0}}">
+      <text class="no-more-text">— 没有更多了 —</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{reportList.length === 0 && !loading}}">
+      <image class="empty-icon" src="https://api.iconify.design/mdi:file-document-outline.svg?color=%23CCCCCC&width=120&height=120" mode="aspectFit"></image>
+      <text class="empty-text">暂无研报</text>
+    </view>
+
+    <!-- 底部安全区 -->
+    <view class="safe-bottom"></view>
+  </scroll-view>
+</view>

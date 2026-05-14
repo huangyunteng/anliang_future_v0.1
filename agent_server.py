@@ -7,7 +7,7 @@ import uvicorn
 
 # ===================== 模型配置 =====================
 # 支持三种模型提供商: "bailian", "siliconflow", "doubao"
-MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "siliconflow").lower()
+MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "doubao").lower()
 
 # 配置信息（不含 model_type，因为我们要手动创建 wrapper）
 CONFIG_DATA = {
@@ -131,6 +131,27 @@ def api_research(agent_name: str, question: str):
     except Exception as e:
         return {"code": 500, "msg": str(e)}
 
+@app.post("/api/chat")
+def api_chat(request: dict):
+    """通用聊天接口，供AI Agent页面使用"""
+    question = request.get("question", "")
+    if not question:
+        return {"code": 400, "msg": "问题不能为空"}
+    try:
+        # 默认使用期货分析师智能体
+        result = agent_future(question)
+        answer = result.content if hasattr(result, "content") else str(result)
+        return {
+            "code": 200,
+            "data": {
+                "answer": answer,
+                "agent_used": "期货分析师",
+                "suggested_agents": ["研报专员", "情绪监控"]
+            }
+        }
+    except Exception as e:
+        return {"code": 500, "msg": str(e)}
+
 # ===================== 启动 =====================
 if __name__ == "__main__":
     print("="*60)
@@ -138,5 +159,6 @@ if __name__ == "__main__":
     print(f"📦 已加载 skills: {list(skill_contents.keys())}")
     print(f"🤖 智能体: {list(agent_map.keys())}")
     print("📡 接口: http://127.0.0.1:8000/api/research")
+    print("💬 聊天接口: http://127.0.0.1:8000/api/chat")
     print("="*60)
     uvicorn.run(app, host="0.0.0.0", port=8000)

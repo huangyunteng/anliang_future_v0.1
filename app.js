@@ -15,8 +15,11 @@ App({
     // 开发环境（本地测试）- 使用ngrok公网地址让老板测试
     // apiBaseUrl: 'http://127.0.0.1:8000',
     
-    // cpolar测试环境（老板远程访问）- 填入你的cpolar地址
-    apiBaseUrl: 'https://1029f019.r7.cpolar.cn',  // 改为你的实际cpolar地址
+    // 开发环境（本地测试）
+    apiBaseUrl: 'http://127.0.0.1:8000',
+    
+    // cpolar测试环境（远程访问）- 需要启动cpolar
+    // apiBaseUrl: 'https://1029f019.r7.cpolar.cn',
     
     // 生产环境（线上部署）- 正式上线时启用
     // apiBaseUrl: 'https://your-domain.com/api',
@@ -34,12 +37,12 @@ App({
       // 豆包收费接口
       doubao: {
         baseUrl: 'https://ark.cn-beijing.volces.com/api/v3',
-        apiKey: '', // 请在此处填入您的API Key
+        apiKey: 'a2befa65-66e7-4e29-a298-2e5123337b74', // 从配置文件读取
         model: 'doubao-pro',
         maxTokens: 4000,
         temperature: 0.7
       },
-      // 当前使用的AI服务 (默认使用千问免费版)
+      // 当前使用的AI服务 (默认使用硅基流动)
       currentService: 'qianwen'
     },
     

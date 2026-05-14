@@ -221,24 +221,38 @@ Page({
     researchTeam: [
       {
         id: 1,
-        name: '王明',
-        title: '首席经济学家',
-        avatar: '/images/avatar-user.png',
-        expertise: ['宏观研究', '政策分析']
+        name: '赵肖肖',
+        title: '安粮期货研究所负责人',
+        avatar: '/images/team/赵肖肖.png',
+        expertise: ['量化投资', '程序化交易']
       },
       {
         id: 2,
-        name: '李华',
-        title: '策略研究主管',
-        avatar: '/images/avatar-user.png',
-        expertise: ['投资策略', '资产配置']
+        name: '李雨馨',
+        title: '对冲策略中心负责人',
+        avatar: '/images/team/李雨馨.png',
+        expertise: ['基本面分析', '企业避险']
       },
       {
         id: 3,
-        name: '张伟',
-        title: '行业研究总监',
-        avatar: '/images/avatar-user.png',
-        expertise: ['新能源', '制造业']
+        name: '潘兆敏',
+        title: '农产品研究员',
+        avatar: '/images/team/潘兆敏.png',
+        expertise: ['农产品', '套利套保']
+      },
+      {
+        id: 4,
+        name: '朱书颖',
+        title: '油脂研究员',
+        avatar: '/images/team/朱书颖.png',
+        expertise: ['油脂油料', '供需分析']
+      },
+      {
+        id: 5,
+        name: '钟远',
+        title: '投资咨询部总经理',
+        avatar: '/images/team/钟远.png',
+        expertise: ['投资策略', '产业服务']
       }
     ],
     
@@ -454,14 +468,16 @@ Page({
   // 分析师点击
   onAnalystTap(e) {
     const id = e.currentTarget.dataset.id
-    const analyst = this.data.researchTeam.find(item => item.id === id)
-    if (analyst) {
-      wx.showModal({
-        title: analyst.name,
-        content: `职位：${analyst.title}\n研究领域：${analyst.expertise.join('、')}`,
-        showCancel: false
-      })
-    }
+    wx.navigateTo({
+      url: `/pages/team-detail/team-detail?id=${id}`
+    })
+  },
+
+  // 查看更多分析师
+  onMoreAnalysts() {
+    wx.navigateTo({
+      url: '/pages/report/report?level1=2'
+    })
   },
 
   // 书籍点击

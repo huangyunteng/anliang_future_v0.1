@@ -1,152 +1,369 @@
-/* pages/report/report.wxss */
+/* pages/report/report.wxss - 研报页面样式 */
+
+/* ========== 页面容器 ========== */
 .page-container {
-  min-height: 100vh;
+  height: 100vh;
   background-color: #F5F5F5;
-}
-
-.content-scroll {
-  height: calc(100vh - env(safe-area-inset-bottom) - 70px);
-  padding-top: 0;
-  padding-bottom: 70px;
-}
-
-.page-header {
-  padding: 20px 16px;
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #EEEEEE;
-}
-
-.page-title {
-  display: block;
-  font-size: 22px;
-  font-weight: 600;
-  color: #333333;
-  margin-bottom: 8px;
-}
-
-.page-subtitle {
-  font-size: 14px;
-  color: #999999;
-}
-
-.reports-list {
-  padding: 16px;
-}
-
-.report-item {
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.report-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
+  flex-direction: column;
 }
 
-.report-title {
+/* ========== 红色顶部区域 ========== */
+.red-header {
+  background: linear-gradient(135deg, #C8102E 0%, #A00D25 100%);
+  padding: 30rpx 30rpx 40rpx;
+  border-radius: 0 0 30rpx 30rpx;
+  flex-shrink: 0;
+}
+
+.header-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 8rpx;
+}
+
+.header-subtitle {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ========== 一级选项卡 ========== */
+.level1-tabs {
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1rpx solid #EEEEEE;
+  flex-shrink: 0;
+}
+
+.level1-tab {
+  position: relative;
+  padding: 24rpx 30rpx;
   flex: 1;
-  font-size: 16px;
+  text-align: center;
+}
+
+.level1-tab-text {
+  font-size: 30rpx;
+  color: #666666;
+  font-weight: 500;
+}
+
+.level1-tab.active .level1-tab-text {
+  color: #C8102E;
+  font-weight: 600;
+}
+
+.level1-tab-line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50rpx;
+  height: 4rpx;
+  background-color: #C8102E;
+  border-radius: 2rpx;
+}
+
+/* ========== 二级选项卡 ========== */
+.level2-tabs {
+  background-color: #FFFFFF;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+}
+
+.level2-tabs-scroll {
+  white-space: nowrap;
+  padding: 0 20rpx;
+}
+
+.level2-tab {
+  display: inline-block;
+  padding: 14rpx 28rpx;
+  margin-right: 16rpx;
+  background-color: #F5F5F5;
+  border-radius: 30rpx;
+}
+
+.level2-tab:last-child {
+  margin-right: 0;
+}
+
+.level2-tab-text {
+  font-size: 26rpx;
+  color: #666666;
+  white-space: nowrap;
+}
+
+.level2-tab.active {
+  background-color: #C8102E;
+}
+
+.level2-tab.active .level2-tab-text {
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* ========== 内容轮播区域 ========== */
+.content-swiper {
+  flex: 1;
+  height: auto;
+}
+
+.content-swiper swiper-item {
+  height: 100%;
+  overflow: hidden;
+}
+
+.swiper-scroll {
+  height: 100%;
+}
+
+.content-padding {
+  padding: 20rpx 24rpx;
+}
+
+/* ========== 7×24快讯列表 ========== */
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.news-item {
+  display: flex;
+  background-color: #FFFFFF;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.news-time-badge {
+  width: 96rpx;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+}
+
+.news-time-text {
+  font-size: 22rpx;
+  color: #C8102E;
+  background-color: rgba(200, 16, 46, 0.1);
+  padding: 6rpx 12rpx;
+  border-radius: 6rpx;
+  display: inline-block;
+}
+
+.news-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.news-title {
+  font-size: 30rpx;
   font-weight: 500;
   color: #333333;
   line-height: 1.4;
+  display: block;
+  margin-bottom: 8rpx;
 }
 
-.report-tag {
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-left: 8px;
-}
-
-.report-tag.macro {
-  background-color: #E8F4FF;
-  color: #1890FF;
-}
-
-.report-tag.industry {
-  background-color: #F6FFED;
-  color: #52C41A;
-}
-
-.report-tag.strategy {
-  background-color: #FFF7E6;
-  color: #FA8C16;
-}
-
-.report-summary {
-  font-size: 14px;
-  color: #666666;
-  line-height: 1.5;
-  margin-bottom: 12px;
+.news-summary {
+  font-size: 26rpx;
+  color: #999999;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
 
-.report-footer {
+/* ========== 研报列表 ========== */
+.report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.report-card {
+  background-color: #FFFFFF;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.report-category-tag {
+  display: inline-block;
+  margin-bottom: 12rpx;
+}
+
+.category-tag-text {
+  font-size: 22rpx;
+  color: #C8102E;
+  background-color: rgba(200, 16, 46, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 6rpx;
+}
+
+.report-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333333;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.report-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid #F0F0F0;
+  flex-wrap: wrap;
+}
+
+.report-meta-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .report-author,
+.report-views,
 .report-date {
-  font-size: 12px;
+  font-size: 24rpx;
   color: #999999;
 }
 
-.report-stats {
-  display: flex;
-  gap: 16px;
+.report-separator {
+  margin: 0 12rpx;
+  color: #DDDDDD;
 }
 
-.stat {
+/* ========== 查看更多 ========== */
+.view-more {
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 30rpx;
+  margin-top: 10rpx;
+  background-color: #FFFFFF;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
 }
 
-.stat-icon {
-  width: 12px;
-  height: 12px;
-  margin-right: 4px;
-}
-
-.stat-number {
-  font-size: 12px;
-  color: #999999;
-}
-
-.load-more {
-  text-align: center;
-  padding: 20px;
-}
-
-.load-more-text {
-  font-size: 14px;
+.view-more-text {
+  font-size: 28rpx;
   color: #C8102E;
+  font-weight: 500;
 }
 
-.empty-state {
+.view-more-arrow {
+  width: 0;
+  height: 0;
+  border-top: 8rpx solid transparent;
+  border-bottom: 8rpx solid transparent;
+  border-left: 12rpx solid #C8102E;
+  margin-left: 10rpx;
+}
+
+/* ========== 研究团队 ========== */
+.team-section {
+  padding: 16rpx;
+}
+
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.team-card {
+  width: calc(50% - 8rpx);
+  min-height: 260rpx;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.team-card:active {
+  background-color: #FAFAFA;
+  transform: scale(0.98);
+}
+
+.team-avatar-wrapper {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 16rpx;
+}
+
+.team-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background-color: #F5F5F5;
+  position: relative;
+  z-index: 1;
+}
+
+.team-avatar-ring {
+  position: absolute;
+  top: -4rpx;
+  left: -4rpx;
+  right: -4rpx;
+  bottom: -4rpx;
+  border: 3rpx solid #C8102E;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.team-info {
+  width: 100%;
   text-align: center;
-  padding: 60px 16px;
 }
 
-.empty-icon {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 16px;
-  opacity: 0.4;
+.team-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+  display: block;
+  margin-bottom: 8rpx;
 }
 
-.empty-text {
-  font-size: 14px;
-  color: #999999;
+.team-position {
+  font-size: 22rpx;
+  color: #C8102E;
+  display: block;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.team-arrow {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+}
+
+.arrow-icon {
+  width: 0;
+  height: 0;
+  border-top: 8rpx solid transparent;
+  border-bottom: 8rpx solid transparent;
+  border-left: 10rpx solid #CCCCCC;
+}
+
+/* ========== 底部安全区 ========== */
+.safe-bottom {
+  height: 50rpx;
 }

@@ -7,6 +7,42 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from typing import Dict, Any, List, Optional, Tuple
 import json
+import re
+
+# ==================== 简化配置读取 ====================
+# 配置文件路径（放在项目上一级目录）
+CONFIG_FILE = r"E:\hyt\other\anliang-futures\config_informations_not_upload.py"
+
+def load_config():
+    """从配置文件加载所有设置"""
+    config = {}
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+                content = f.read()
+            # 解析配置（支持单引号、双引号、无引号）
+            patterns = {
+                'MODEL_PROVIDER': r"MODEL_PROVIDER\s*=\s*['\"]?(\w+)['\"]?",
+                'DOUBAO_MODEL': r"DOUBAO_MODEL\s*=\s*['\"]?([^'\"]+)['\"]?",
+                'DOUBAO_API_KEY': r"DOUBAO_API_KEY\s*=\s*['\"]?([^'\"]+)['\"]?",
+                'SILICONFLOW_API_KEY': r"SILICONFLOW_API_KEY\s*=\s*['\"]?([^'\"]+)['\"]?",
+                'DASHSCOPE_API_KEY': r"DASHSCOPE_API_KEY\s*=\s*['\"]?([^'\"]+)['\"]?",
+            }
+            for key, pattern in patterns.items():
+                m = re.search(pattern, content)
+                if m:
+                    config[key] = m.group(1).strip()
+        except Exception as e:
+            print(f"⚠️ 读取配置文件失败: {e}")
+    return config
+
+# 加载配置并设置环境变量
+_config = load_config()
+print(f"📋 已加载配置: MODEL_PROVIDER = {_config.get('MODEL_PROVIDER', 'siliconflow')}")
+
+# 将配置注入环境变量（供后续代码使用）
+for key, value in _config.items():
+    os.environ[key] = value
 
 from agentscope import init
 from agentscope.agent import ReActAgent
@@ -52,89 +88,41 @@ def extract_text_from_response(resp) -> str:
 
 
 # ===================== 1. 模型配置 =====================
-# 通过设置环境变量 MODEL_PROVIDER 来切换模型，可选值：bailian, siliconflow, doubao
+# 通过配置文件 config_informations_not_upload.py 中的 MODEL_PROVIDER 切换模型
+# 可选值：bailian, siliconflow, doubao
 
-def get_api_key_from_external(key_name):
-    """从外部配置文件读取API密钥"""
-    external_config_path = r"E:\hyt\other\anliang-futures\config_informations_not_upload.py"
-    try:
-        if os.path.exists(external_config_path):
-            with open(external_config_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            # 匹配 key = "value" 或 key="value" 格式
-            import re
-            pattern = rf'{key_name}\s*=\s*["\']([^"\']*)["\']'
-            match = re.search(pattern, content)
-            if match:
-                return match.group(1)
-    except Exception:
-        pass
-    return None
-
-# 获取模型提供商，优先使用外部配置
-MODEL_PROVIDER = os.getenv("MODEL_PROVIDER")
-if not MODEL_PROVIDER:
-    MODEL_PROVIDER = get_api_key_from_external("MODEL_PROVIDER")
-if not MODEL_PROVIDER:
-    MODEL_PROVIDER = "siliconflow"  # 默认使用硅基流动模型，因其API密钥已验证有效
-MODEL_PROVIDER = MODEL_PROVIDER.lower()
+MODEL_PROVIDER = os.getenv("MODEL_PROVIDER", "siliconflow").lower()
 
 if MODEL_PROVIDER == "bailian":
     # 阿里百炼配置
     MODEL_CLASS = DashScopeChatModel
-    # 获取API密钥，优先顺序：环境变量 > 外部配置文件 > 默认值
-    dashscope_key = os.getenv("DASHSCOPE_API_KEY")
-    if not dashscope_key:
-        dashscope_key = get_api_key_from_external("DASHSCOPE_API_KEY")
-    if not dashscope_key:
-        dashscope_key = "sk-c722d4d16f9c4fca9e7b8e8401603a29"
-    
+    dashscope_key = os.getenv("DASHSCOPE_API_KEY", "")
     MODEL_CONFIG = {
-        "model_name": "qwen-max",  # 可选: qwen-max, qwen-plus, qwen-turbo
+        "model_name": "qwen-max",
         "api_key": dashscope_key,
         "stream": True,
     }
     FORMATTER = DashScopeChatFormatter()
     print(f"✅ 当前使用的模型提供商: 百炼 (DashScope)")
-    print(f"   API密钥源: {'外部配置文件' if dashscope_key and dashscope_key != 'sk-c722d4d16f9c4fca9e7b8e8401603a29' else '环境变量' if os.getenv('DASHSCOPE_API_KEY') else '默认值'}")
 
 elif MODEL_PROVIDER == "siliconflow":
     # 硅基流动配置 (OpenAI 兼容)
     MODEL_CLASS = OpenAIChatModel
-    # 获取API密钥，优先顺序：环境变量 > 外部配置文件 > 默认值
-    siliconflow_key = os.getenv("SILICONFLOW_API_KEY")
-    if not siliconflow_key:
-        siliconflow_key = get_api_key_from_external("SILICONFLOW_API_KEY")
-    if not siliconflow_key:
-        siliconflow_key = "your-siliconflow-api-key"
-    
+    siliconflow_key = os.getenv("SILICONFLOW_API_KEY", "")
     MODEL_CONFIG = {
         "model_name": "deepseek-ai/DeepSeek-V3",
         "api_key": siliconflow_key,
         "client_kwargs": {"base_url": "https://api.siliconflow.cn/v1"},
         "stream": True,
     }
-    FORMATTER = OpenAIChatFormatter()  # OpenAI 兼容模型使用 OpenAIChatFormatter
+    FORMATTER = OpenAIChatFormatter()
     print(f"✅ 当前使用的模型提供商: 硅基流动 (SiliconFlow)")
-    print(f"   API密钥源: {'外部配置文件' if siliconflow_key and siliconflow_key != 'your-siliconflow-api-key' else '环境变量' if os.getenv('SILICONFLOW_API_KEY') else '默认值'}")
 
 elif MODEL_PROVIDER == "doubao":
     # 豆包配置 (OpenAI 兼容)
     MODEL_CLASS = OpenAIChatModel
-    # 获取API密钥和模型ID，优先顺序：环境变量 > 外部配置文件 > 默认值
-    doubao_key = os.getenv("DOUBAO_API_KEY")
-    if not doubao_key:
-        doubao_key = get_api_key_from_external("DOUBAO_API_KEY")
-    if not doubao_key:
-        doubao_key = "your-doubao-api-key"
-    
-    doubao_model = os.getenv("DOUBAO_MODEL")
-    if not doubao_model:
-        doubao_model = get_api_key_from_external("DOUBAO_MODEL")
-    if not doubao_model:
-        doubao_model = "ep-xxxxxxxxxxxx"
-    
+    doubao_key = os.getenv("DOUBAO_API_KEY", "")
+    doubao_model = os.getenv("DOUBAO_MODEL", "ep-xxxxxxxxxxxx")
     MODEL_CONFIG = {
         "model_name": doubao_model,
         "api_key": doubao_key,
@@ -143,7 +131,6 @@ elif MODEL_PROVIDER == "doubao":
     }
     FORMATTER = OpenAIChatFormatter()
     print(f"✅ 当前使用的模型提供商: 豆包 (Doubao)")
-    print(f"   API密钥源: {'外部配置文件' if doubao_key and doubao_key != 'your-doubao-api-key' else '环境变量' if os.getenv('DOUBAO_API_KEY') else '默认值'}")
 
 else:
     raise ValueError(f"不支持的模型提供商: {MODEL_PROVIDER}")

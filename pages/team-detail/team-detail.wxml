@@ -1,0 +1,50 @@
+<!-- pages/team-detail/team-detail.wxml - 团队成员详情页 -->
+<view class="page-container">
+  <!-- 顶部红色区域 -->
+  <view class="header-section">
+    <view class="header-back" bindtap="onBack">
+      <view class="back-icon"></view>
+    </view>
+    <text class="header-title">团队成员</text>
+  </view>
+
+  <!-- 成员信息卡片 -->
+  <view class="member-card">
+    <!-- 头像 -->
+    <view class="avatar-section">
+      <image class="avatar" src="{{member.avatar}}" mode="aspectFill"></image>
+      <view class="avatar-frame"></view>
+    </view>
+    
+    <!-- 基本信息 -->
+    <view class="info-section">
+      <text class="member-name">{{member.name}}</text>
+      <text class="member-position">{{member.position}}</text>
+    </view>
+
+    <!-- 资质信息 -->
+    <view class="credentials-section">
+      <view class="credential-item" wx:if="{{member.licenseNo}}">
+        <text class="credential-label">期货从业证号</text>
+        <text class="credential-value">{{member.licenseNo}}</text>
+      </view>
+      <view class="credential-item" wx:if="{{member.consultNo}}">
+        <text class="credential-label">投资咨询证号</text>
+        <text class="credential-value">{{member.consultNo}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 个人简介 -->
+  <view class="intro-section">
+    <view class="section-header">
+      <text class="section-title">个人简介</text>
+    </view>
+    <view class="intro-content">
+      <text class="intro-text">{{member.intro}}</text>
+    </view>
+  </view>
+
+  <!-- 底部安全区 -->
+  <view class="safe-bottom"></view>
+</view>

@@ -33,9 +33,24 @@ Page({
       { id: 8, name: '资金管理', desc: '仓位资金规划', icon: '💰', color: '#607D8B' }
     ],
 
+    // 快捷Skills入口
+    hotSkills: [
+      { id: 1, name: 'K线分析', icon: '📉', color: '#E91E63' },
+      { id: 2, name: '止损计算', icon: '🛡️', color: '#3F51B5' },
+      { id: 3, name: '盈亏计算', icon: '💹', color: '#009688' },
+      { id: 4, name: '仓位管理', icon: '📦', color: '#795548' },
+      { id: 5, name: '期货新闻', icon: '📰', color: '#FF5722' }
+    ],
+
     // 输入相关
     inputValue: '',
-    loading: false
+    loading: false,
+
+    // 语音输入
+    isRecording: false,
+
+    // 附件列表
+    attachList: []
   },
 
   onLoad(options) {
@@ -45,12 +60,10 @@ Page({
       this.loadUserAvatar();
       this.loadChatHistory();
     }, 100);
-    
-    // 页面加载完成后滚动到底部
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 500);
-    
+
+    // 初始化录音管理器
+    this.initVoiceRecorder();
+
     // 检查是否有智能体参数
     if (options && options.agentName) {
       const agentName = decodeURIComponent(options.agentName);
@@ -78,11 +91,168 @@ Page({
 
   onShow() {
     this.setData({ currentTabIndex: 2 });
-    this.scrollToBottom();
   },
 
   onReady() {
     // 页面渲染完成
+  },
+
+  // 初始化录音管理器
+  initVoiceRecorder() {
+    const recorderManager = wx.getRecorderManager();
+
+    recorderManager.onStart(() => {
+      console.log('录音开始');
+    });
+
+    recorderManager.onStop((res) => {
+      console.log('录音结束', res);
+      this.setData({ isRecording: false });
+
+      if (res.duration > 1000) {
+        // 录音时长超过1秒，上传识别
+        this.uploadVoiceForRecognition(res.tempFilePath);
+      } else if (res.duration > 0) {
+        wx.showToast({ title: '录音时间太短', icon: 'none' });
+      }
+    });
+
+    recorderManager.onError((err) => {
+      console.error('录音错误', err);
+      this.setData({ isRecording: false });
+      wx.showToast({ title: '录音失败', icon: 'none' });
+    });
+
+    this.recorderManager = recorderManager;
+  },
+
+  // 语音输入点击
+  onVoiceTap() {
+    if (this.data.loading) return;
+
+    if (this.data.isRecording) {
+      // 停止录音
+      this.recorderManager.stop();
+    } else {
+      // 开始录音
+      this.setData({ isRecording: true });
+
+      // 检查权限
+      wx.authorize({
+        scope: 'scope.record',
+        success: () => {
+          this.recorderManager.start({
+            duration: 60000, // 最长60秒
+            sampleRate: 16000,
+            numberOfChannels: 1,
+            encodeBitRate: 48000,
+            format: 'aac'
+          });
+        },
+        fail: () => {
+          this.setData({ isRecording: false });
+          wx.showModal({
+            title: '提示',
+            content: '需要授权录音功能，请在设置中开启',
+            confirmText: '去设置',
+            success: (res) => {
+              if (res.confirm) {
+                wx.openSetting();
+              }
+            }
+          });
+        }
+      });
+    }
+  },
+
+  // 上传语音进行识别
+  async uploadVoiceForRecognition(filePath) {
+    wx.showLoading({ title: '识别中...' });
+
+    try {
+      const response = await app.request({
+        url: '/api/voice/recognize',
+        method: 'POST',
+        filePath: filePath,
+        name: 'voice',
+        formData: { format: 'aac' }
+      });
+
+      wx.hideLoading();
+
+      if (response.code === 200 && response.data.text) {
+        this.setData({
+          inputValue: this.data.inputValue + response.data.text
+        });
+      } else {
+        wx.showToast({ title: '语音识别失败，请手动输入', icon: 'none' });
+      }
+    } catch (err) {
+      wx.hideLoading();
+      console.error('语音识别失败', err);
+      wx.showToast({ title: '语音识别服务暂不可用', icon: 'none' });
+    }
+  },
+
+  // 附件点击
+  onAttachTap() {
+    wx.showActionSheet({
+      itemList: ['图片', '文件'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.chooseImage();
+        } else {
+          this.chooseFile();
+        }
+      }
+    });
+  },
+
+  // 选择图片
+  chooseImage() {
+    wx.chooseImage({
+      count: 9 - this.data.attachList.length,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const newImages = res.tempFiles.map(file => ({
+          type: 'image',
+          path: file.path,
+          name: file.name || 'image.jpg',
+          size: file.size
+        }));
+        this.setData({
+          attachList: [...this.data.attachList, ...newImages]
+        });
+      }
+    });
+  },
+
+  // 选择文件
+  chooseFile() {
+    wx.chooseMessageFile({
+      count: 5 - this.data.attachList.length,
+      success: (res) => {
+        const newFiles = res.tempFiles.map(file => ({
+          type: 'file',
+          path: file.path,
+          name: file.name,
+          size: file.size
+        }));
+        this.setData({
+          attachList: [...this.data.attachList, ...newFiles]
+        });
+      }
+    });
+  },
+
+  // 移除附件
+  onRemoveAttach(e) {
+    const index = e.currentTarget.dataset.index;
+    const attachList = [...this.data.attachList];
+    attachList.splice(index, 1);
+    this.setData({ attachList });
   },
 
   calculateNavigationBarHeight() {
@@ -307,7 +477,28 @@ Page({
       
       const question = presetQuestions[agent.name] || `请${agent.name}帮我分析期货市场`;
       this.setData({ inputValue: question });
-      
+
+      setTimeout(() => {
+        this.onSend();
+      }, 300);
+    }
+  },
+
+  onQuickSkillTap(e) {
+    const id = e.currentTarget.dataset.id;
+    const skill = this.data.hotSkills.find(item => item.id == id);
+    if (skill) {
+      const presetQuestions = {
+        'K线分析': '请分析一下螺纹钢期货的K线形态和技术指标',
+        '止损计算': '帮我计算止损点位，假设我做多螺纹钢期货，开仓价3800，止盈4000',
+        '盈亏计算': '帮我计算盈亏，假设我做多5手螺纹钢，每手盈利100点，每点10元',
+        '仓位管理': '帮我设计仓位管理方案，我有100万资金，想做期货投资',
+        '期货新闻': '搜索一下最新的期货市场新闻'
+      };
+
+      const question = presetQuestions[skill.name] || `请帮我${skill.name}`;
+      this.setData({ inputValue: question });
+
       setTimeout(() => {
         this.onSend();
       }, 300);

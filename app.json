@@ -10,7 +10,9 @@
     "pages/profile/profile",
     "pages/agent-square/agent-square",
     "pages/search/search",
-    "pages/test-connection/test-connection"
+    "pages/test-connection/test-connection",
+    "pages/report-list/report-list",
+    "pages/team-detail/team-detail"
   ],
   "window": {
     "navigationBarBackgroundColor": "#C8102E",

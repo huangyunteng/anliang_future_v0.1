@@ -1,0 +1,189 @@
+/* pages/report-list/report-list.wxss - 研报完整列表页面样式 */
+
+/* ========== 页面容器 ========== */
+.page-container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== 页面标题栏 ========== */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 30rpx;
+  background-color: #C8102E;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left,
+.header-right {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+}
+
+.back-icon {
+  width: 0;
+  height: 0;
+  border-top: 12rpx solid transparent;
+  border-bottom: 12rpx solid transparent;
+  border-right: 18rpx solid #FFFFFF;
+}
+
+.header-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  flex: 1;
+  text-align: center;
+}
+
+/* ========== 列表滚动区域 ========== */
+.report-scroll {
+  flex: 1;
+  height: calc(100vh - 88rpx);
+  padding: 20rpx 24rpx;
+  box-sizing: border-box;
+}
+
+/* ========== 研报列表 ========== */
+.report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.report-card {
+  background-color: #FFFFFF;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.report-card:active {
+  background-color: #FAFAFA;
+}
+
+.report-category-tag {
+  display: inline-block;
+  margin-bottom: 12rpx;
+}
+
+.category-tag-text {
+  font-size: 22rpx;
+  color: #C8102E;
+  background-color: rgba(200, 16, 46, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 6rpx;
+}
+
+.report-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333333;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.report-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.report-meta-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.report-author,
+.report-views,
+.report-date {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.report-separator {
+  margin: 0 12rpx;
+  color: #DDDDDD;
+}
+
+/* ========== 加载更多 ========== */
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx;
+  margin-top: 10rpx;
+}
+
+.load-more:active {
+  opacity: 0.7;
+}
+
+.load-more-text {
+  font-size: 28rpx;
+  color: #C8102E;
+}
+
+/* ========== 加载中 ========== */
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx;
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* ========== 没有更多 ========== */
+.no-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 0;
+}
+
+.no-more-text {
+  font-size: 26rpx;
+  color: #CCCCCC;
+}
+
+/* ========== 空状态 ========== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.empty-icon {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 30rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* ========== 底部安全区 ========== */
+.safe-bottom {
+  height: 30rpx;
+}

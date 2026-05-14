@@ -3,8 +3,8 @@
   
   <!-- AI智能体主界面 -->
   <view class="ai-agent-container">
-    <!-- 头部标题区 -->
-    <view class="ai-header-section">
+    <!-- 头部标题区 - 欢迎动画 -->
+    <view class="ai-header-section {{headerCollapsed ? 'collapsed' : ''}}">
       <view class="header-top-bar">
         <view class="header-title">
           <text class="ai-name">智演智能体</text>
@@ -14,6 +14,7 @@
       
       <!-- 快捷智能体入口 -->
       <view class="quick-agents-section">
+        <text class="section-label">AGENT</text>
         <scroll-view class="quick-agents-scroll" scroll-x>
           <view class="quick-agents-list">
             <block wx:for="{{hotAgents}}" wx:key="id">
@@ -22,6 +23,23 @@
                   <text class="quick-agent-icon-text">{{item.icon}}</text>
                 </view>
                 <text class="quick-agent-name">{{item.name}}</text>
+              </view>
+            </block>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 快捷Skills入口 -->
+      <view class="quick-skills-section">
+        <text class="section-label">SKILLS</text>
+        <scroll-view class="quick-skills-scroll" scroll-x>
+          <view class="quick-skills-list">
+            <block wx:for="{{hotSkills}}" wx:key="id">
+              <view class="quick-skill-item" data-id="{{item.id}}" bindtap="onQuickSkillTap">
+                <view class="quick-skill-icon" style="background-color: {{item.color}};">
+                  <text class="quick-skill-icon-text">{{item.icon}}</text>
+                </view>
+                <text class="quick-skill-name">{{item.name}}</text>
               </view>
             </block>
           </view>
@@ -68,7 +86,7 @@
       <block wx:if="{{messages.length === 0}}">
         <!-- 欢迎提示 -->
         <view class="welcome-message">
-          <view class="welcome-icon">🤖</view>
+          <image class="welcome-icon" src="/images/ai-assistant.png" mode="aspectFit"></image>
           <text class="welcome-title">欢迎使用安粮期货投研助手</text>
           <text class="welcome-description">我是您的专业期货投研智能体，可以为您提供：</text>
           <view class="welcome-features">
@@ -145,20 +163,44 @@
   
   <!-- 输入区域 - 放在TabBar上方 -->
   <view class="input-section" bindtap="onCollapseHistory">
-    <view class="input-container">
-      <input 
-        class="chat-input" 
-        placeholder="请输入您的问题..." 
-        value="{{inputValue}}"
-        bindinput="onInput"
-        bindconfirm="onSend"
-        adjust-position="{{false}}"
-        confirm-type="send"
-        disabled="{{loading}}"
-      />
-      <button class="send-button" bindtap="onSend" hover-class="none" disabled="{{loading || !inputValue}}">
-        <text class="send-icon">{{loading ? '⏳' : '发送'}}</text>
-      </button>
+    <!-- 附件预览区域 -->
+    <view class="attach-preview" wx:if="{{attachList.length > 0}}">
+      <block wx:for="{{attachList}}" wx:key="index">
+        <view class="attach-item">
+          <image wx:if="{{item.type === 'image'}}" class="attach-thumb" src="{{item.path}}" mode="aspectFill"></image>
+          <view wx:else class="attach-file">
+            <text class="attach-file-icon">📄</text>
+            <text class="attach-file-name">{{item.name}}</text>
+          </view>
+          <view class="attach-remove" bindtap="onRemoveAttach" data-index="{{index}}">✕</view>
+        </view>
+      </block>
+    </view>
+    <!-- 输入框和按钮区域 -->
+    <view class="input-row">
+      <!-- 附件按钮 -->
+      <view class="attach-btn" bindtap="onAttachTap" hover-class="none">
+        <text class="attach-icon">📎</text>
+      </view>
+      <view class="input-container">
+        <textarea
+          class="chat-input"
+          placeholder="请输入您的问题..."
+          value="{{inputValue}}"
+          bindinput="onInput"
+          adjust-position="{{false}}"
+          disabled="{{loading}}"
+          auto-height
+          maxlength="500"
+        />
+        <!-- 语音输入按钮 -->
+        <view class="voice-btn {{isRecording ? 'recording' : ''}}" bindtap="onVoiceTap" hover-class="none">
+          <text class="voice-icon">{{isRecording ? '⏹' : '🎤'}}</text>
+        </view>
+        <button class="send-button" bindtap="onSend" hover-class="none" disabled="{{loading || !inputValue}}">
+          <text class="send-icon">{{loading ? '⏳' : '发送'}}</text>
+        </button>
+      </view>
     </view>
     <view class="input-tips">
       <text class="input-tip">支持：期货分析、策略设计、资讯查询、风险计算等</text>

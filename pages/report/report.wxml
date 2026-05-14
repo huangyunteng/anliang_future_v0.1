@@ -1,60 +1,132 @@
-<!-- pages/report/report.wxml -->
+<!-- pages/report/report.wxml - 研报页面 -->
 <view class="page-container">
-  <!-- 页面内容 -->
-  <scroll-view class="content-scroll" scroll-y>
-    <!-- 页面标题 -->
-    <view class="page-header">
-      <text class="page-title">研报中心</text>
-      <text class="page-subtitle">专业研究，深度见解</text>
+  <!-- 红色顶部区域 -->
+  <view class="red-header">
+    <text class="header-title">研报中心</text>
+    <text class="header-subtitle">专业研究 · 深度见解</text>
+  </view>
+
+  <!-- 一级选项卡 -->
+  <view class="level1-tabs">
+    <view 
+      class="level1-tab {{level1Index === 0 ? 'active' : ''}}" 
+      data-index="0"
+      bindtap="onLevel1TabChange"
+    >
+      <text class="level1-tab-text">7×24快讯</text>
+      <view class="level1-tab-line" wx:if="{{level1Index === 0}}"></view>
     </view>
-    
-    <!-- 简单测试内容 -->
-    <view style="padding: 40rpx; text-align: center;">
-      <text>研报页面 - TabBar切换测试</text>
-      <text>如果看到这个，说明页面加载成功</text>
+    <view 
+      class="level1-tab {{level1Index === 1 ? 'active' : ''}}" 
+      data-index="1"
+      bindtap="onLevel1TabChange"
+    >
+      <text class="level1-tab-text">研报</text>
+      <view class="level1-tab-line" wx:if="{{level1Index === 1}}"></view>
     </view>
-    
-    <!-- 研报列表 -->
-    <view class="reports-list">
-      <block wx:for="{{reports}}" wx:key="id">
-        <view class="report-item" data-id="{{item.id}}" bindtap="onReportTap">
-          <view class="report-header">
-            <text class="report-title">{{item.title}}</text>
-            <text class="report-tag {{item.tagType}}">{{item.tag}}</text>
-          </view>
-          <view class="report-content">
-            <text class="report-summary">{{item.summary}}</text>
-          </view>
-          <view class="report-footer">
-            <text class="report-author">{{item.author}}</text>
-            <text class="report-date">{{item.date}}</text>
-            <view class="report-stats">
-              <view class="stat">
-                <image class="stat-icon" src="https://api.iconify.design/mdi:eye-outline.svg?color=%23666666" mode="aspectFit"></image>
-                <text class="stat-number">{{item.viewCount}}</text>
+    <view 
+      class="level1-tab {{level1Index === 2 ? 'active' : ''}}" 
+      data-index="2"
+      bindtap="onLevel1TabChange"
+    >
+      <text class="level1-tab-text">研究团队</text>
+      <view class="level1-tab-line" wx:if="{{level1Index === 2}}"></view>
+    </view>
+  </view>
+
+  <!-- 二级选项卡（仅在"研报"一级选项卡下显示） -->
+  <view class="level2-tabs" wx:if="{{level1Index === 1}}">
+    <scroll-view class="level2-tabs-scroll" scroll-x>
+      <view 
+        wx:for="{{level2Tabs}}" 
+        wx:key="id"
+        class="level2-tab {{level2Index === index ? 'active' : ''}}" 
+        data-index="{{index}}"
+        bindtap="onLevel2TabChange"
+      >
+        <text class="level2-tab-text">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 页面内容区 - 使用swiper实现切换 -->
+  <swiper 
+    class="content-swiper" 
+    current="{{level1Index}}" 
+    bindchange="onSwiperChange"
+  >
+    <!-- 7×24快讯 -->
+    <swiper-item>
+      <scroll-view class="swiper-scroll" scroll-y>
+        <view class="content-padding">
+          <view class="news-list">
+            <view class="news-item" wx:for="{{newsList}}" wx:key="id" data-id="{{item.id}}" bindtap="onNewsTap">
+              <view class="news-time-badge">
+                <text class="news-time-text">{{item.time}}</text>
               </view>
-              <view class="stat">
-                <image class="stat-icon" src="https://api.iconify.design/mdi:download.svg?color=%23666666" mode="aspectFit"></image>
-                <text class="stat-number">{{item.downloadCount}}</text>
+              <view class="news-content">
+                <text class="news-title">{{item.title}}</text>
+                <text class="news-summary">{{item.summary}}</text>
               </view>
             </view>
           </view>
         </view>
-      </block>
-    </view>
-    
-    <!-- 加载更多 -->
-    <view wx:if="{{hasMore}}" class="load-more" bindtap="onLoadMore">
-      <text class="load-more-text">加载更多</text>
-    </view>
-    
-    <!-- 空状态 -->
-    <view wx:if="{{!loading && reports.length === 0}}" class="empty-state">
-      <image class="empty-icon" src="https://api.iconify.design/mdi:inbox.svg?color=%23CCCCCC&width=120&height=120" mode="aspectFit"></image>
-      <text class="empty-text">暂无研报数据</text>
-    </view>
-  </scroll-view>
-  
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 研报 -->
+    <swiper-item>
+      <scroll-view class="swiper-scroll" scroll-y bindscrolltolower="onScrollToLower">
+        <view class="content-padding">
+          <view class="report-list">
+            <view class="report-card" wx:for="{{reportList}}" wx:key="id" data-id="{{item.id}}" bindtap="onReportTap">
+              <view class="report-category-tag">
+                <text class="category-tag-text">{{item.category}}</text>
+              </view>
+              <text class="report-title">{{item.title}}</text>
+              <view class="report-meta">
+                <view class="report-meta-left">
+                  <text class="report-author">{{item.author}}</text>
+                  <text class="report-separator">|</text>
+                  <text class="report-views">浏览量：{{item.views}}</text>
+                </view>
+                <text class="report-date">发布日期：{{item.date}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="view-more" bindtap="onViewMore">
+            <text class="view-more-text">点击查看更多研报</text>
+            <view class="view-more-arrow"></view>
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 研究团队 -->
+    <swiper-item>
+      <scroll-view class="swiper-scroll" scroll-y>
+        <view class="content-padding team-section">
+          <view class="team-grid">
+            <view class="team-card" wx:for="{{teamList}}" wx:key="id" data-id="{{item.id}}" bindtap="onTeamMemberTap">
+              <view class="team-avatar-wrapper">
+                <image class="team-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+                <view class="team-avatar-ring"></view>
+              </view>
+              <view class="team-info">
+                <text class="team-name">{{item.name}}</text>
+                <text class="team-position">{{item.position}}</text>
+              </view>
+              <view class="team-arrow">
+                <view class="arrow-icon"></view>
+              </view>
+            </view>
+          </view>
+          <view class="safe-bottom"></view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
+
   <!-- 科技感自定义TabBar -->
   <custom-tabbar 
     currentTab="{{currentTabIndex}}"
